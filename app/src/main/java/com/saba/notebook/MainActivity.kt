@@ -1,46 +1,36 @@
 package com.saba.notebook
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Button
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.saba.notebook.ui.theme.NoteBookTheme
 
 class MainActivity : ComponentActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
-            NoteBookTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    Greeting("Android")
-                }
-            }
+        setContentView(R.layout.activity_main)
+
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
+
+        if (isLoggedIn) {
+            startActivity(Intent(this, WelcomeActivity::class.java))
+            finish()
+            return
         }
-    }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+        val btnSignIn = findViewById<Button>(R.id.btnSignIn)
+        val btnLogin = findViewById<Button>(R.id.btnLogin)
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NoteBookTheme {
-        Greeting("Android")
+        btnSignIn.setOnClickListener {
+            startActivity(Intent(this, RegisterActivity::class.java))
+        }
+
+        btnLogin.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
+        }
     }
 }
