@@ -1,20 +1,51 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#BEFFF5EB">
+
+    <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_alignParentTop="true"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnSignIn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Sign In" />
+    <ImageView
+        android:id="@+id/imgCorner"
+        android:layout_width="320dp"
+        android:layout_height="320dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/main_icon" />
 
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#FF6954"
+        android:text="Register"
+        android:background="@drawable/corner_button"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/dmseriftext"
+        android:textSize="30sp"
+        android:textColor="#000" />
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Login" />
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#FFFF6954"
+        android:text="Login"
+        android:background="@drawable/corner_button"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/dmseriftext"
+        android:textSize="30sp"
+        android:textColor="#000" />
 
-</LinearLayout>
+    </LinearLayout>
+
+
+
+</RelativeLayout>
