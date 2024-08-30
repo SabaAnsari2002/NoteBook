@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
             return
         }
 
-        val btnSignIn = findViewById<Button>(R.id.btnSignIn)
+        val btnSignIn = findViewById<Button>(R.id.btnRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnSignIn.setOnClickListener {
