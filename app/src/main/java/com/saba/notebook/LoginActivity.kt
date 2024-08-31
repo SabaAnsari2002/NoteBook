@@ -32,7 +32,7 @@ class LoginActivity : ComponentActivity() {
                 if (dbHelper.getUser(username, password)) {
                     // Save login state
                     sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
-                    startActivity(Intent(this, WelcomeActivity::class.java))
+                    startActivity(Intent(this, HomeActivity::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
