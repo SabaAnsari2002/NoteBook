@@ -33,12 +33,9 @@ class HomeActivity : ComponentActivity() {
 
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
-            val noteText = "New Note" // You can change this to get input from a dialog or another UI element.
-            val noteId = dbHelper.addNote(userId, noteText)
-            if (noteId > -1) {
-                notesList.add(noteText)
-                notesAdapter.notifyDataSetChanged()
-            }
+            val intent = Intent(this, AddNoteActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            startActivityForResult(intent, 1)
         }
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -49,6 +46,19 @@ class HomeActivity : ComponentActivity() {
             sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            val newNoteTitle = data?.getStringExtra("NEW_NOTE_TITLE")
+            val newNoteDate = data?.getStringExtra("NEW_NOTE_DATE")
+            if (!newNoteTitle.isNullOrEmpty() && !newNoteDate.isNullOrEmpty()) {
+                val displayText = "$newNoteTitle\n$newNoteDate"
+                notesList.add(displayText)
+                notesAdapter.notifyDataSetChanged()
+            }
         }
     }
 }
