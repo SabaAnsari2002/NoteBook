@@ -9,7 +9,7 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
         private const val DATABASE_NAME = "NoteBook"
         private const val TABLE_USERS = "users"
         private const val TABLE_NOTES = "notes"
@@ -17,6 +17,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val KEY_USERNAME = "username"
         private const val KEY_PASSWORD = "password"
         private const val KEY_NOTE_ID = "note_id"
+        private const val KEY_NOTE_TITLE = "note_title"
+        private const val KEY_NOTE_DATE = "note_date"
         private const val KEY_NOTE_TEXT = "note_text"
         private const val KEY_USER_ID = "user_id"
     }
@@ -24,12 +26,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     override fun onCreate(db: SQLiteDatabase) {
         val CREATE_USERS_TABLE = ("CREATE TABLE " + TABLE_USERS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_USERNAME + " TEXT UNIQUE,"  // اضافه کردن UNIQUE constraint
+                + KEY_USERNAME + " TEXT UNIQUE,"
                 + KEY_PASSWORD + " TEXT" + ")")
         db.execSQL(CREATE_USERS_TABLE)
 
         val CREATE_NOTES_TABLE = ("CREATE TABLE " + TABLE_NOTES + "("
                 + KEY_NOTE_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NOTE_TITLE + " TEXT,"
+                + KEY_NOTE_DATE + " TEXT,"
                 + KEY_NOTE_TEXT + " TEXT,"
                 + KEY_USER_ID + " INTEGER,"
                 + "FOREIGN KEY(" + KEY_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + KEY_ID + ")" + ")")
@@ -43,13 +47,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         onCreate(db)
     }
 
-    fun addNote(userId: Int, noteText: String): Long {
+    fun addNote(userId: Int, title: String, date: String, noteText: String): Long {
         val db = this.writableDatabase
         val values = ContentValues()
+        values.put(KEY_NOTE_TITLE, title)
+        values.put(KEY_NOTE_DATE, date)
         values.put(KEY_NOTE_TEXT, noteText)
         values.put(KEY_USER_ID, userId)
         return db.insert(TABLE_NOTES, null, values)
     }
+
 
     fun getNotesByUserId(userId: Int): List<String> {
         val notes = ArrayList<String>()
