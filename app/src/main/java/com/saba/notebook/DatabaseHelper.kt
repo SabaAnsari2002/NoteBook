@@ -9,7 +9,7 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 6
         private const val DATABASE_NAME = "NoteBook"
         private const val TABLE_USERS = "users"
         private const val TABLE_NOTES = "notes"
@@ -105,7 +105,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return notes
     }
 
-
     fun addUser(username: String, password: String): Long {
         if (isUsernameExists(username)) {
             return -1
@@ -146,5 +145,45 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             }
         }
         cursor.close()
+    }
+
+    // New methods for retrieving note text and images
+
+    fun getNoteText(userId: Int, title: String): String? {
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_TEXT), "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?",
+            arrayOf(userId.toString(), title), null, null, null)
+        var noteText: String? = null
+        if (cursor.moveToFirst()) {
+            noteText = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TEXT))
+        }
+        cursor.close()
+        return noteText
+    }
+
+    fun getImagesForNoteTitle(userId: Int, title: String): List<ByteArray> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT $KEY_IMAGE_DATA FROM $TABLE_IMAGES WHERE $KEY_NOTE_ID = (SELECT $KEY_NOTE_ID FROM $TABLE_NOTES WHERE $KEY_USER_ID=? AND $KEY_NOTE_TITLE=?)",
+            arrayOf(userId.toString(), title)
+        )
+        val images = mutableListOf<ByteArray>()
+        if (cursor.moveToFirst()) {
+            do {
+                images.add(cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_IMAGE_DATA)))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return images
+    }
+
+    fun updateNote(userId: Int, originalTitle: String?, newTitle: String, newDate: String, newText: String): Int {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(KEY_NOTE_TITLE, newTitle)
+        values.put(KEY_NOTE_DATE, newDate)
+        values.put(KEY_NOTE_TEXT, newText)
+
+        return db.update(TABLE_NOTES, values, "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?", arrayOf(userId.toString(), originalTitle))
     }
 }

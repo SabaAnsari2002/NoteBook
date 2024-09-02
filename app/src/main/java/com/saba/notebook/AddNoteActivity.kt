@@ -1,4 +1,3 @@
-
 package com.saba.notebook
 
 import android.app.Activity
@@ -31,6 +30,9 @@ class AddNoteActivity : ComponentActivity() {
     private lateinit var dbHelper: DatabaseHelper
 
     private val bitmaps = mutableListOf<Bitmap>()
+    private var isEditing = false
+    private var originalTitle: String? = null
+    private var userId: Int = -1
 
     private val getContent = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris: List<Uri>? ->
         uris?.let { selectedImages ->
@@ -52,12 +54,36 @@ class AddNoteActivity : ComponentActivity() {
 
         dbHelper = DatabaseHelper(this)
 
+        userId = intent.getIntExtra("USER_ID", -1)
+
         // Set default date to current date
         val calendar = Calendar.getInstance()
         val currentYear = calendar.get(Calendar.YEAR)
         val currentMonth = calendar.get(Calendar.MONTH)
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
         dateEditText.setText("$currentYear-${currentMonth + 1}-$currentDay")
+
+        // Check if editing an existing note
+        val noteTitle = intent.getStringExtra("NOTE_TITLE")
+        val noteDate = intent.getStringExtra("NOTE_DATE")
+        if (!noteTitle.isNullOrEmpty() && !noteDate.isNullOrEmpty()) {
+            titleEditText.setText(noteTitle)
+            dateEditText.setText(noteDate)
+
+            // Retrieve and set the note message
+            val noteText = dbHelper.getNoteText(userId, noteTitle)
+            messageEditText.setText(noteText)
+
+            // Retrieve and display images
+            val images = dbHelper.getImagesForNoteTitle(userId, noteTitle)
+            for (imageData in images) {
+                val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+                insertBitmapIntoMessage(bitmap)
+            }
+
+            isEditing = true
+            originalTitle = noteTitle
+        }
 
         // Date picker for date input
         dateEditText.setOnClickListener {
@@ -78,22 +104,26 @@ class AddNoteActivity : ComponentActivity() {
     private fun insertImageIntoMessage(imageUri: Uri) {
         val bitmap = getBitmapFromUri(imageUri)
         bitmap?.let {
-            val newWidth = it.width / 5
-            val newHeight = it.height / 5
-
-            val resizedBitmap = Bitmap.createScaledBitmap(it, newWidth, newHeight, true)
-            bitmaps.add(resizedBitmap)
-
-            val drawable = BitmapDrawable(resources, resizedBitmap)
-            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-
-            val selectionStart = messageEditText.selectionStart
-            val spannableString = SpannableString(" ")
-            val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
-            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-            messageEditText.text.insert(selectionStart, spannableString)
+            insertBitmapIntoMessage(it)
         }
+    }
+
+    private fun insertBitmapIntoMessage(bitmap: Bitmap) {
+        val newWidth = bitmap.width / 5
+        val newHeight = bitmap.height / 5
+
+        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+        bitmaps.add(resizedBitmap)
+
+        val drawable = BitmapDrawable(resources, resizedBitmap)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+
+        val selectionStart = messageEditText.selectionStart
+        val spannableString = SpannableString(" ")
+        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+        spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        messageEditText.text.insert(selectionStart, spannableString)
     }
 
     private fun getBitmapFromUri(uri: Uri): Bitmap? {
@@ -112,30 +142,41 @@ class AddNoteActivity : ComponentActivity() {
         val message = messageEditText.text.toString()
 
         if (title.isNotEmpty() && date.isNotEmpty() && message.isNotEmpty()) {
-            val userId = intent.getIntExtra("USER_ID", -1)
-            val noteId = dbHelper.addNote(userId, title, date, message)
-            if (noteId > -1) {
-                // ذخیره تصاویر
-                for (bitmap in bitmaps) {
-                    val stream = ByteArrayOutputStream()
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                    val byteArray = stream.toByteArray()
-                    dbHelper.addImage(noteId, byteArray)
+            if (isEditing) {
+                // Update existing note
+                val updatedRows = dbHelper.updateNote(userId, originalTitle, title, date, message)
+                if (updatedRows > 0) {
+                    // Note updated successfully
+                    Toast.makeText(this, "Note updated successfully", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "Error updating note", Toast.LENGTH_SHORT).show()
+                    return
                 }
-
-                val resultIntent = Intent()
-                resultIntent.putExtra("NEW_NOTE_TITLE", title)
-                resultIntent.putExtra("NEW_NOTE_DATE", date)
-                setResult(RESULT_OK, resultIntent)
-                finish()
             } else {
-                Toast.makeText(this, "Error saving note", Toast.LENGTH_SHORT).show()
+                // Add new note
+                val noteId = dbHelper.addNote(userId, title, date, message)
+                if (noteId > -1) {
+                    // Save images
+                    for (bitmap in bitmaps) {
+                        val stream = ByteArrayOutputStream()
+                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                        val byteArray = stream.toByteArray()
+                        dbHelper.addImage(noteId, byteArray)
+                    }
+                } else {
+                    Toast.makeText(this, "Error saving note", Toast.LENGTH_SHORT).show()
+                    return
+                }
             }
+            val resultIntent = Intent()
+            resultIntent.putExtra("NEW_NOTE_TITLE", title)
+            resultIntent.putExtra("NEW_NOTE_DATE", date)
+            setResult(Activity.RESULT_OK, resultIntent)
+            finish()
         } else {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
         }
     }
-
 
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
@@ -152,8 +193,6 @@ class AddNoteActivity : ComponentActivity() {
         val alert = builder.create()
         alert.show()
     }
-
-
 
     override fun onDestroy() {
         super.onDestroy()

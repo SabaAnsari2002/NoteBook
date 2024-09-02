@@ -31,6 +31,18 @@ class HomeActivity : ComponentActivity() {
         notesAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, notesList)
         notesListView.adapter = notesAdapter
 
+        notesListView.setOnItemClickListener { _, _, position, _ ->
+            val noteDetails = notesList[position].split("\n")
+            val noteTitle = noteDetails[0]
+            val noteDate = noteDetails[1]
+
+            val intent = Intent(this, AddNoteActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("NOTE_TITLE", noteTitle)
+            intent.putExtra("NOTE_DATE", noteDate)
+            startActivityForResult(intent, 1)
+        }
+
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
             val intent = Intent(this, AddNoteActivity::class.java)
