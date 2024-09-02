@@ -9,10 +9,11 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 5
         private const val DATABASE_NAME = "NoteBook"
         private const val TABLE_USERS = "users"
         private const val TABLE_NOTES = "notes"
+        private const val TABLE_IMAGES = "images"
         private const val KEY_ID = "id"
         private const val KEY_USERNAME = "username"
         private const val KEY_PASSWORD = "password"
@@ -21,6 +22,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val KEY_NOTE_DATE = "note_date"
         private const val KEY_NOTE_TEXT = "note_text"
         private const val KEY_USER_ID = "user_id"
+        private const val KEY_IMAGE_DATA = "image_data"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -38,12 +40,19 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + KEY_USER_ID + " INTEGER,"
                 + "FOREIGN KEY(" + KEY_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + KEY_ID + ")" + ")")
         db.execSQL(CREATE_NOTES_TABLE)
+
+        val CREATE_IMAGES_TABLE = ("CREATE TABLE " + TABLE_IMAGES + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_NOTE_ID + " INTEGER,"
+                + KEY_IMAGE_DATA + " BLOB,"
+                + "FOREIGN KEY(" + KEY_NOTE_ID + ") REFERENCES " + TABLE_NOTES + "(" + KEY_NOTE_ID + ")" + ")")
+        db.execSQL(CREATE_IMAGES_TABLE)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTES")
-
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_IMAGES")
         onCreate(db)
     }
 
@@ -57,24 +66,49 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.insert(TABLE_NOTES, null, values)
     }
 
+    fun addImage(noteId: Long, imageData: ByteArray): Long {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(KEY_NOTE_ID, noteId)
+        values.put(KEY_IMAGE_DATA, imageData)
+        return db.insert(TABLE_IMAGES, null, values)
+    }
+
+    fun getImagesForNote(noteId: Long): List<ByteArray> {
+        val images = ArrayList<ByteArray>()
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_IMAGES, arrayOf(KEY_IMAGE_DATA), "$KEY_NOTE_ID=?",
+            arrayOf(noteId.toString()), null, null, null)
+        if (cursor.moveToFirst()) {
+            do {
+                images.add(cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_IMAGE_DATA)))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return images
+    }
 
     fun getNotesByUserId(userId: Int): List<String> {
         val notes = ArrayList<String>()
         val db = this.readableDatabase
-        val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_TEXT), "$KEY_USER_ID=?",
+        val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_TITLE, KEY_NOTE_DATE), "$KEY_USER_ID=?",
             arrayOf(userId.toString()), null, null, null)
         if (cursor.moveToFirst()) {
             do {
-                notes.add(cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TEXT)))
+                val title = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TITLE))
+                val date = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_DATE))
+                val displayText = "$title\n$date"
+                notes.add(displayText)
             } while (cursor.moveToNext())
         }
         cursor.close()
         return notes
     }
 
+
     fun addUser(username: String, password: String): Long {
         if (isUsernameExists(username)) {
-            return -1 // برگرداندن -1 در صورتی که نام کاربری موجود باشد
+            return -1
         }
 
         val db = this.writableDatabase
