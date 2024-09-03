@@ -29,10 +29,11 @@ class AddNoteActivity : ComponentActivity() {
     private lateinit var attachButton: Button
     private lateinit var dbHelper: DatabaseHelper
 
-    private val bitmaps = mutableListOf<Bitmap>()
+    private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
     private var originalTitle: String? = null
     private var userId: Int = -1
+    private var noteId: Long = -1
 
     private val getContent = registerForActivityResult(ActivityResultContracts.GetMultipleContents()) { uris: List<Uri>? ->
         uris?.let { selectedImages ->
@@ -71,18 +72,28 @@ class AddNoteActivity : ComponentActivity() {
             dateEditText.setText(noteDate)
 
             // Retrieve and set the note message
-            val noteText = dbHelper.getNoteText(userId, noteTitle)
+            val noteText = dbHelper.getNoteText(userId, noteTitle) ?: ""
+
+            // Retrieve images and their positions
+            val images = dbHelper.getImagesForNoteTitle(userId, noteTitle)
+
+            // Sort images by position
+            val sortedImages = images.sortedBy { it.second }
+
+            // Set the text first
             messageEditText.setText(noteText)
 
-            // Retrieve and display images
-            val images = dbHelper.getImagesForNoteTitle(userId, noteTitle)
-            for (imageData in images) {
+            // Insert images at correct positions
+            var offset = 0
+            for ((imageData, position) in sortedImages) {
                 val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-                insertBitmapIntoMessage(bitmap)
+                insertBitmapIntoMessage(bitmap, position + offset)
+                offset++ // Increase offset as one character is added for each image
             }
 
             isEditing = true
             originalTitle = noteTitle
+            noteId = dbHelper.getNoteId(userId, noteTitle)
         }
 
         // Date picker for date input
@@ -104,26 +115,28 @@ class AddNoteActivity : ComponentActivity() {
     private fun insertImageIntoMessage(imageUri: Uri) {
         val bitmap = getBitmapFromUri(imageUri)
         bitmap?.let {
-            insertBitmapIntoMessage(it)
+            val position = messageEditText.selectionStart
+            insertBitmapIntoMessage(it, position)
         }
     }
 
-    private fun insertBitmapIntoMessage(bitmap: Bitmap) {
-        val newWidth = bitmap.width / 5
-        val newHeight = bitmap.height / 5
+    private fun insertBitmapIntoMessage(bitmap: Bitmap, position: Int) {
+        if (position <= messageEditText.text.length) {
+            val newWidth = bitmap.width / 5
+            val newHeight = bitmap.height / 5
 
-        val resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
-        bitmaps.add(resizedBitmap)
+            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+            bitmaps.add(Pair(resizedBitmap, position))
 
-        val drawable = BitmapDrawable(resources, resizedBitmap)
-        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+            val drawable = BitmapDrawable(resources, resizedBitmap)
+            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
 
-        val selectionStart = messageEditText.selectionStart
-        val spannableString = SpannableString(" ")
-        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
-        spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            val spannableString = SpannableString(" ")
+            val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-        messageEditText.text.insert(selectionStart, spannableString)
+            messageEditText.text.insert(position, spannableString)
+        }
     }
 
     private fun getBitmapFromUri(uri: Uri): Bitmap? {
@@ -147,6 +160,7 @@ class AddNoteActivity : ComponentActivity() {
                 val updatedRows = dbHelper.updateNote(userId, originalTitle, title, date, message)
                 if (updatedRows > 0) {
                     // Note updated successfully
+                    updateImages()
                     Toast.makeText(this, "Note updated successfully", Toast.LENGTH_SHORT).show()
                 } else {
                     Toast.makeText(this, "Error updating note", Toast.LENGTH_SHORT).show()
@@ -154,15 +168,10 @@ class AddNoteActivity : ComponentActivity() {
                 }
             } else {
                 // Add new note
-                val noteId = dbHelper.addNote(userId, title, date, message)
+                noteId = dbHelper.addNote(userId, title, date, message)
                 if (noteId > -1) {
                     // Save images
-                    for (bitmap in bitmaps) {
-                        val stream = ByteArrayOutputStream()
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                        val byteArray = stream.toByteArray()
-                        dbHelper.addImage(noteId, byteArray)
-                    }
+                    saveImages()
                 } else {
                     Toast.makeText(this, "Error saving note", Toast.LENGTH_SHORT).show()
                     return
@@ -171,11 +180,31 @@ class AddNoteActivity : ComponentActivity() {
             val resultIntent = Intent()
             resultIntent.putExtra("NEW_NOTE_TITLE", title)
             resultIntent.putExtra("NEW_NOTE_DATE", date)
+            resultIntent.putExtra("ORIGINAL_NOTE_TITLE", originalTitle)
             setResult(Activity.RESULT_OK, resultIntent)
             finish()
         } else {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show()
         }
+    }
+
+
+    private fun saveImages() {
+        for ((bitmap, position) in bitmaps) {
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            val byteArray = stream.toByteArray()
+            dbHelper.addImage(noteId, byteArray, position)
+        }
+    }
+
+    private fun updateImages() {
+        val images = bitmaps.map { (bitmap, position) ->
+            val stream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+            Pair(stream.toByteArray(), position)
+        }
+        dbHelper.updateNoteImages(noteId, images)
     }
 
     override fun onBackPressed() {
@@ -197,7 +226,7 @@ class AddNoteActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی
-        bitmaps.forEach { it.recycle() }
+        bitmaps.forEach { it.first.recycle() }
         bitmaps.clear()
     }
 }

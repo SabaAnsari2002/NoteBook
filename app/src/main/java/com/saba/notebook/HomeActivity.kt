@@ -66,11 +66,25 @@ class HomeActivity : ComponentActivity() {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             val newNoteTitle = data?.getStringExtra("NEW_NOTE_TITLE")
             val newNoteDate = data?.getStringExtra("NEW_NOTE_DATE")
+            val originalNoteTitle = data?.getStringExtra("ORIGINAL_NOTE_TITLE")
+
             if (!newNoteTitle.isNullOrEmpty() && !newNoteDate.isNullOrEmpty()) {
                 val displayText = "$newNoteTitle\n$newNoteDate"
-                notesList.add(displayText)
+
+                if (!originalNoteTitle.isNullOrEmpty()) {
+                    // Find the index of the original note and replace it
+                    val index = notesList.indexOfFirst { it.startsWith(originalNoteTitle) }
+                    if (index != -1) {
+                        notesList[index] = displayText
+                    }
+                } else {
+                    // Add new note
+                    notesList.add(displayText)
+                }
+
                 notesAdapter.notifyDataSetChanged()
             }
         }
     }
+
 }
