@@ -87,7 +87,7 @@ class AddNoteActivity : ComponentActivity() {
             var offset = 0
             for ((imageData, position) in sortedImages) {
                 val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
-                insertBitmapIntoMessage(bitmap, position + offset)
+                insertBitmapIntoMessage(bitmap, position + offset, resize = false)  // Resize = false here
                 offset++ // Increase offset as one character is added for each image
             }
 
@@ -120,24 +120,28 @@ class AddNoteActivity : ComponentActivity() {
         }
     }
 
-    private fun insertBitmapIntoMessage(bitmap: Bitmap, position: Int) {
-        if (position <= messageEditText.text.length) {
+    private fun insertBitmapIntoMessage(bitmap: Bitmap, position: Int, resize: Boolean = true) {
+        val finalBitmap = if (resize) {
+            // Resize the image if necessary
             val newWidth = bitmap.width / 5
             val newHeight = bitmap.height / 5
-
-            val resizedBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
-            bitmaps.add(Pair(resizedBitmap, position))
-
-            val drawable = BitmapDrawable(resources, resizedBitmap)
-            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-
-            val spannableString = SpannableString(" ")
-            val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
-            spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-            messageEditText.text.insert(position, spannableString)
+            Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+        } else {
+            bitmap
         }
+
+        bitmaps.add(Pair(finalBitmap, position))
+
+        val drawable = BitmapDrawable(resources, finalBitmap)
+        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+
+        val spannableString = SpannableString(" ")
+        val imageSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+        spannableString.setSpan(imageSpan, 0, 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+        messageEditText.text.insert(position, spannableString)
     }
+
 
     private fun getBitmapFromUri(uri: Uri): Bitmap? {
         return try {
