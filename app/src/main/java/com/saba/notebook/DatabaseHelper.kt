@@ -27,27 +27,27 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     override fun onCreate(db: SQLiteDatabase) {
-        val CREATE_USERS_TABLE = ("CREATE TABLE " + TABLE_USERS + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_USERNAME + " TEXT UNIQUE,"
-                + KEY_PASSWORD + " TEXT" + ")")
+        val CREATE_USERS_TABLE = ("CREATE TABLE $TABLE_USERS ("
+                + "$KEY_ID INTEGER PRIMARY KEY,"
+                + "$KEY_USERNAME TEXT UNIQUE,"
+                + "$KEY_PASSWORD TEXT)")
         db.execSQL(CREATE_USERS_TABLE)
 
-        val CREATE_NOTES_TABLE = ("CREATE TABLE " + TABLE_NOTES + "("
-                + KEY_NOTE_ID + " INTEGER PRIMARY KEY,"
-                + KEY_NOTE_TITLE + " TEXT,"
-                + KEY_NOTE_DATE + " TEXT,"
-                + KEY_NOTE_TEXT + " TEXT,"
-                + KEY_USER_ID + " INTEGER,"
-                + "FOREIGN KEY(" + KEY_USER_ID + ") REFERENCES " + TABLE_USERS + "(" + KEY_ID + ")" + ")")
+        val CREATE_NOTES_TABLE = ("CREATE TABLE $TABLE_NOTES ("
+                + "$KEY_NOTE_ID INTEGER PRIMARY KEY,"
+                + "$KEY_NOTE_TITLE TEXT,"
+                + "$KEY_NOTE_DATE TEXT,"
+                + "$KEY_NOTE_TEXT TEXT,"
+                + "$KEY_USER_ID INTEGER,"
+                + "FOREIGN KEY($KEY_USER_ID) REFERENCES $TABLE_USERS($KEY_ID))")
         db.execSQL(CREATE_NOTES_TABLE)
 
-        val CREATE_IMAGES_TABLE = ("CREATE TABLE " + TABLE_IMAGES + "("
-                + KEY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_NOTE_ID + " INTEGER,"
-                + KEY_IMAGE_DATA + " BLOB,"
-                + KEY_IMAGE_POSITION + " INTEGER,"
-                + "FOREIGN KEY(" + KEY_NOTE_ID + ") REFERENCES " + TABLE_NOTES + "(" + KEY_NOTE_ID + ")" + ")")
+        val CREATE_IMAGES_TABLE = ("CREATE TABLE $TABLE_IMAGES ("
+                + "$KEY_ID INTEGER PRIMARY KEY,"
+                + "$KEY_NOTE_ID INTEGER,"
+                + "$KEY_IMAGE_DATA BLOB,"
+                + "$KEY_IMAGE_POSITION INTEGER,"
+                + "FOREIGN KEY($KEY_NOTE_ID) REFERENCES $TABLE_NOTES($KEY_NOTE_ID))")
         db.execSQL(CREATE_IMAGES_TABLE)
     }
 
@@ -114,7 +114,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         if (isUsernameExists(username)) {
             return -1
         }
-
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(KEY_USERNAME, username)
@@ -176,7 +175,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         values.put(KEY_NOTE_TITLE, newTitle)
         values.put(KEY_NOTE_DATE, newDate)
         values.put(KEY_NOTE_TEXT, newText)
-
         return db.update(TABLE_NOTES, values, "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?", arrayOf(userId.toString(), originalTitle))
     }
 
@@ -184,10 +182,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = this.writableDatabase
         db.beginTransaction()
         try {
-            // Delete existing images for this note
             db.delete(TABLE_IMAGES, "$KEY_NOTE_ID=?", arrayOf(noteId.toString()))
-
-            // Insert new images
             for ((imageData, position) in images) {
                 val values = ContentValues()
                 values.put(KEY_NOTE_ID, noteId)
@@ -213,15 +208,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return noteId
     }
 
-    fun checkTables() {
-        val db = this.readableDatabase
-        val cursor = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null)
-        if (cursor.moveToFirst()) {
-            while (!cursor.isAfterLast) {
-                Log.d("DB Tables", "Table Name: " + cursor.getString(0))
-                cursor.moveToNext()
+
+    // اضافه کردن تابع جدید برای حذف چندین نوت به صورت همزمان
+    fun deleteMultipleNotes(userId: Int, noteTitles: List<String>): Int {
+        val db = this.writableDatabase
+        var deletedCount = 0
+        db.beginTransaction()
+        try {
+            for (title in noteTitles) {
+                val noteId = getNoteId(userId, title)
+                if (noteId != -1L) {
+                    db.delete(TABLE_IMAGES, "$KEY_NOTE_ID=?", arrayOf(noteId.toString()))
+                    val result = db.delete(TABLE_NOTES, "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?", arrayOf(userId.toString(), title))
+                    if (result > 0) deletedCount++
+                }
             }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
         }
-        cursor.close()
+        return deletedCount
     }
 }
