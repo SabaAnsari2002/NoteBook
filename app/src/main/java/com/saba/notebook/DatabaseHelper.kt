@@ -9,7 +9,7 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 7
         private const val DATABASE_NAME = "NoteBook"
         private const val TABLE_USERS = "users"
         private const val TABLE_NOTES = "notes"
@@ -23,6 +23,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val KEY_NOTE_TEXT = "note_text"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_IMAGE_DATA = "image_data"
+        private const val KEY_IMAGE_POSITION = "image_position"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -45,6 +46,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 + KEY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_NOTE_ID + " INTEGER,"
                 + KEY_IMAGE_DATA + " BLOB,"
+                + KEY_IMAGE_POSITION + " INTEGER,"
                 + "FOREIGN KEY(" + KEY_NOTE_ID + ") REFERENCES " + TABLE_NOTES + "(" + KEY_NOTE_ID + ")" + ")")
         db.execSQL(CREATE_IMAGES_TABLE)
     }
@@ -66,22 +68,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return db.insert(TABLE_NOTES, null, values)
     }
 
-    fun addImage(noteId: Long, imageData: ByteArray): Long {
+    fun addImage(noteId: Long, imageData: ByteArray, position: Int): Long {
         val db = this.writableDatabase
         val values = ContentValues()
         values.put(KEY_NOTE_ID, noteId)
         values.put(KEY_IMAGE_DATA, imageData)
+        values.put(KEY_IMAGE_POSITION, position)
         return db.insert(TABLE_IMAGES, null, values)
     }
 
-    fun getImagesForNote(noteId: Long): List<ByteArray> {
-        val images = ArrayList<ByteArray>()
+    fun getImagesForNote(noteId: Long): List<Pair<ByteArray, Int>> {
+        val images = ArrayList<Pair<ByteArray, Int>>()
         val db = this.readableDatabase
-        val cursor = db.query(TABLE_IMAGES, arrayOf(KEY_IMAGE_DATA), "$KEY_NOTE_ID=?",
-            arrayOf(noteId.toString()), null, null, null)
+        val cursor = db.query(TABLE_IMAGES, arrayOf(KEY_IMAGE_DATA, KEY_IMAGE_POSITION), "$KEY_NOTE_ID=?",
+            arrayOf(noteId.toString()), null, null, KEY_IMAGE_POSITION)
         if (cursor.moveToFirst()) {
             do {
-                images.add(cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_IMAGE_DATA)))
+                val imageData = cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_IMAGE_DATA))
+                val position = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IMAGE_POSITION))
+                images.add(Pair(imageData, position))
             } while (cursor.moveToNext())
         }
         cursor.close()
@@ -104,7 +109,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.close()
         return notes
     }
-
 
     fun addUser(username: String, password: String): Long {
         if (isUsernameExists(username)) {
@@ -134,6 +138,79 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val result = cursor.count > 0
         cursor.close()
         return result
+    }
+
+    fun getNoteText(userId: Int, title: String): String? {
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_TEXT), "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?",
+            arrayOf(userId.toString(), title), null, null, null)
+        var noteText: String? = null
+        if (cursor.moveToFirst()) {
+            noteText = cursor.getString(cursor.getColumnIndexOrThrow(KEY_NOTE_TEXT))
+        }
+        cursor.close()
+        return noteText
+    }
+
+    fun getImagesForNoteTitle(userId: Int, title: String): List<Pair<ByteArray, Int>> {
+        val db = this.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT $KEY_IMAGE_DATA, $KEY_IMAGE_POSITION FROM $TABLE_IMAGES WHERE $KEY_NOTE_ID = (SELECT $KEY_NOTE_ID FROM $TABLE_NOTES WHERE $KEY_USER_ID=? AND $KEY_NOTE_TITLE=?) ORDER BY $KEY_IMAGE_POSITION",
+            arrayOf(userId.toString(), title)
+        )
+        val images = mutableListOf<Pair<ByteArray, Int>>()
+        if (cursor.moveToFirst()) {
+            do {
+                val imageData = cursor.getBlob(cursor.getColumnIndexOrThrow(KEY_IMAGE_DATA))
+                val position = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_IMAGE_POSITION))
+                images.add(Pair(imageData, position))
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return images
+    }
+
+    fun updateNote(userId: Int, originalTitle: String?, newTitle: String, newDate: String, newText: String): Int {
+        val db = this.writableDatabase
+        val values = ContentValues()
+        values.put(KEY_NOTE_TITLE, newTitle)
+        values.put(KEY_NOTE_DATE, newDate)
+        values.put(KEY_NOTE_TEXT, newText)
+
+        return db.update(TABLE_NOTES, values, "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?", arrayOf(userId.toString(), originalTitle))
+    }
+
+    fun updateNoteImages(noteId: Long, images: List<Pair<ByteArray, Int>>) {
+        val db = this.writableDatabase
+        db.beginTransaction()
+        try {
+            // Delete existing images for this note
+            db.delete(TABLE_IMAGES, "$KEY_NOTE_ID=?", arrayOf(noteId.toString()))
+
+            // Insert new images
+            for ((imageData, position) in images) {
+                val values = ContentValues()
+                values.put(KEY_NOTE_ID, noteId)
+                values.put(KEY_IMAGE_DATA, imageData)
+                values.put(KEY_IMAGE_POSITION, position)
+                db.insert(TABLE_IMAGES, null, values)
+            }
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    fun getNoteId(userId: Int, title: String): Long {
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_ID), "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?",
+            arrayOf(userId.toString(), title), null, null, null)
+        var noteId: Long = -1
+        if (cursor.moveToFirst()) {
+            noteId = cursor.getLong(cursor.getColumnIndexOrThrow(KEY_NOTE_ID))
+        }
+        cursor.close()
+        return noteId
     }
 
     fun checkTables() {
