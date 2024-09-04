@@ -13,7 +13,7 @@ class RegisterActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        setContentView(R.layout.activity_register1)
 
         dbHelper = DatabaseHelper(this)
 

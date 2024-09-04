@@ -24,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_home1)
 
         dbHelper = DatabaseHelper(this)
         userId = intent.getIntExtra("USER_ID", -1)

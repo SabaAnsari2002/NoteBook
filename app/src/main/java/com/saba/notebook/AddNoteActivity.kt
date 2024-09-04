@@ -45,7 +45,7 @@ class AddNoteActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_note)
+        setContentView(R.layout.activity_add_note1)
 
         titleEditText = findViewById(R.id.note_title)
         dateEditText = findViewById(R.id.note_date)
