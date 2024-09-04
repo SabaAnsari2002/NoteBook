@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:hint="Date"
             android:textSize="18dp"
-            android:textColor="#757653"
+            android:textColor="#3A853B"
             android:fontFamily="@font/acme"
             android:layout_marginTop="7dp"
             android:layout_marginLeft="10dp"
