@@ -210,23 +210,36 @@ class AddNoteActivity : ComponentActivity() {
         }
         dbHelper.updateNoteImages(noteId, images)
     }
+override fun onBackPressed() {
+    val title = titleEditText.text.toString().trim()
+    val message = messageEditText.text.toString().trim()
 
-    override fun onBackPressed() {
+    if (title.isEmpty() && message.isEmpty()) {
+        // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
+        super.onBackPressed()
+    } else {
+        // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
         val builder = AlertDialog.Builder(this)
         builder.setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
             .setCancelable(false)
-            .setPositiveButton("بله") { dialog, id ->
-                saveNote()  // ذخیره نوت
-                finish()  // بستن اکتیویتی و بازگشت به هوم
+            .setPositiveButton("بله") { dialog, _ ->
+                if (title.isEmpty() || message.isEmpty()) {
+                    // اگر عنوان یا پیام خالی باشد، پیغام خطا نمایش بده
+                    Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                } else {
+                    saveNote()  // ذخیره نوت
+                    finish()  // بستن اکتیویتی و بازگشت به هوم
+                }
             }
-            .setNegativeButton("خیر") { dialog, id ->
+            .setNegativeButton("خیر") { dialog, _ ->
                 dialog.dismiss()  // نوت را ذخیره نکن
                 super.onBackPressed()  // فراخوانی متد پیش‌فرض onBackPressed برای بستن اکتیویتی
             }
         val alert = builder.create()
         alert.show()
     }
-
+}
     override fun onDestroy() {
         super.onDestroy()
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی

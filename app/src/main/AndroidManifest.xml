@@ -32,8 +32,10 @@
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".WelcomeActivity" />
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".AddNoteActivity" />
+        <activity android:name=".HomeActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+            <!-- دیگر تنظیمات -->
+        </activity>        <activity android:name=".AddNoteActivity" />
 
     </application>
 
