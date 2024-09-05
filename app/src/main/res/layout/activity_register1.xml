@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/register_button"
+            android:background="@drawable/register_button1"
             android:fontFamily="@font/dmseriftext"
             android:hint="Username"
             android:padding="10dp"
@@ -34,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/register_button"
+            android:background="@drawable/register_button1"
             android:fontFamily="@font/dmseriftext"
             android:gravity="center"
             android:hint="Password"
@@ -55,7 +55,7 @@
             android:layout_marginTop="10dp"
             android:backgroundTint="#AFCBD3"
             android:text="Register"
-            android:background="@drawable/register_button"
+            android:background="@drawable/register_button1"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/dmseriftext"
             android:textSize="30sp"
@@ -69,5 +69,5 @@
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:src="@drawable/register_icon" />
+        android:src="@drawable/register_icon1" />
 </RelativeLayout>

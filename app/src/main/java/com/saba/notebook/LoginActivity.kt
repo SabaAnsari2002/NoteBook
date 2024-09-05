@@ -15,7 +15,7 @@ class LoginActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+        setContentView(R.layout.activity_login1)
 
         dbHelper = DatabaseHelper(this)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)

@@ -10,7 +10,7 @@ class SplashActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_splash)
+        setContentView(R.layout.activity_splash1)
 
         // تأخیر دو ثانیه‌ای قبل از شروع MainActivity
         Handler(Looper.getMainLooper()).postDelayed({

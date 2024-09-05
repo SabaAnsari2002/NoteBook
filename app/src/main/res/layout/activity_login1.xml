@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:padding="16dp"
+android:background="#BEFFF5EB">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_alignParentTop="true"
+    android:layout_marginBottom="16dp">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_button1"
+        android:fontFamily="@font/dmseriftext"
+        android:hint="Username"
+        android:padding="10dp"
+        android:textColorHint="#FFF1E3"
+        android:textSize="25dp"
+        android:gravity="center"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_button1"
+        android:fontFamily="@font/dmseriftext"
+        android:gravity="center"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:textAlignment="center"
+        android:textColorHint="#FFF1E3"
+        android:textSize="25dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="30dp" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="300dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="#FFAAAD"
+        android:text="Login"
+        android:background="@drawable/login_button1"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/dmseriftext"
+        android:textSize="30sp"
+        android:textColor="#000" />
+
+</LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgCorner"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/login_icon1" />
+</RelativeLayout>
