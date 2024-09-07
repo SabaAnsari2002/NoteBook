@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="#FFF2E8">
+    android:background="#F2EBFF">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,11 +20,11 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/register_button2"
+            android:background="@drawable/register_button5"
             android:fontFamily="@font/dmseriftext"
             android:hint="Username"
             android:padding="10dp"
-            android:textColorHint="#FFF1E3"
+            android:textColorHint="#F2EBFF"
             android:textSize="25dp"
             android:gravity="center"
             android:textAlignment="center" />
@@ -34,14 +34,14 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/register_button2"
+            android:background="@drawable/register_button5"
             android:fontFamily="@font/dmseriftext"
             android:gravity="center"
             android:hint="Password"
             android:inputType="textPassword"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textColorHint="#FFF1E3"
+            android:textColorHint="#F2EBFF"
             android:textSize="25dp" />
 
         <Space
@@ -53,9 +53,9 @@
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_marginTop="10dp"
-            android:backgroundTint="#FFCE2E"
+            android:backgroundTint="#A68ED3"
             android:text="Register"
-            android:background="@drawable/register_button2"
+            android:background="@drawable/register_button5"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/dmseriftext"
             android:textSize="30sp"
@@ -69,5 +69,5 @@
         android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         android:layout_centerInParent="true"
-        android:src="@drawable/register_icon2" />
+        android:src="@drawable/register_icon5" />
 </RelativeLayout>

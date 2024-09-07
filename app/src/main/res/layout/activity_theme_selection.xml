@@ -1,0 +1,286 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#FFFFFF">
+
+    <TextView
+        android:id="@+id/theme_selection_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Themes"
+        android:textSize="50sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:fontFamily="@font/paytone"
+        android:textColor="#000000" />
+
+    <GridLayout
+        android:id="@+id/theme_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/theme_selection_text"
+        android:layout_marginTop="30dp"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        >
+
+        <!-- Theme 1-->
+        <LinearLayout
+            android:id="@+id/theme1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/add_note1"
+                android:contentDescription="theme1" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="theme1"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <!-- Theme2 -->
+        <LinearLayout
+            android:id="@+id/theme2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/add_note2"
+                    android:contentDescription="theme2" />
+
+                <ImageView
+                    android:id="@+id/lock_icon_theme2"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/lock"
+                    android:visibility="visible"
+                    android:layout_gravity="end|bottom"
+                    />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="theme2"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/theme2_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: 10 Coins"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <!-- Theme3 -->
+        <LinearLayout
+            android:id="@+id/Theme3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="0"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/add_note3"
+                    android:contentDescription="Theme3" />
+
+                <ImageView
+                    android:id="@+id/lock_icon_theme3"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/lock"
+                    android:visibility="visible"
+                    android:layout_gravity="end|bottom"
+                    />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Theme3"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/theme3_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: 20 Coins"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <!-- Theme4 -->
+        <LinearLayout
+            android:id="@+id/Theme4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/add_note4"
+                    android:contentDescription="Theme4" />
+
+                <ImageView
+                    android:id="@+id/lock_icon_theme4"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/lock"
+                    android:visibility="visible"
+                    android:layout_gravity="end|bottom"
+                    />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="theme4"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/theme4_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: 30 Coins"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:visibility="visible"/>
+        </LinearLayout>
+
+        <!-- Theme5 -->
+        <LinearLayout
+            android:id="@+id/Theme5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/add_note5"
+                    android:contentDescription="Theme5" />
+
+                <ImageView
+                    android:id="@+id/lock_icon_theme5"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/lock"
+                    android:visibility="visible"
+                    android:layout_gravity="end|bottom"
+                    />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="theme4"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/theme5_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price: 30 Coins"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:layout_marginTop="4dp"
+                android:visibility="visible"/>
+        </LinearLayout>
+    </GridLayout>
+
+    <TextView
+        android:id="@+id/total_coins_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Total Coins: 0"
+        android:textSize="24sp"
+        android:fontFamily="@font/paytone"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"/>
+
+</RelativeLayout>
