@@ -79,7 +79,7 @@ class HomeActivityTheme3 : AppCompatActivity() {
         val noteTitle = noteDetails[0]
         val noteDate = noteDetails[1]
 
-        val intent = Intent(this, AddNoteActivity::class.java)
+        val intent = Intent(this, AddNoteActivityTheme3::class.java)
         intent.putExtra("USER_ID", userId)
         intent.putExtra("NOTE_TITLE", noteTitle)
         intent.putExtra("NOTE_DATE", noteDate)
@@ -96,7 +96,7 @@ class HomeActivityTheme3 : AppCompatActivity() {
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
             exitSelectionMode()
-            val intent = Intent(this, AddNoteActivity::class.java)
+            val intent = Intent(this, AddNoteActivityTheme3::class.java)
             intent.putExtra("USER_ID", userId)
             startActivityForResult(intent, 1)
         }
@@ -106,7 +106,7 @@ class HomeActivityTheme3 : AppCompatActivity() {
         btnLogout.setOnClickListener {
             exitSelectionMode()
             sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
-            startActivity(Intent(this, MainActivity::class.java))
+            startActivity(Intent(this, MainActivityTheme3::class.java))
             finish()
         }
         findViewById<Button>(R.id.theme_button).setOnClickListener {
