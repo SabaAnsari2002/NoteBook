@@ -31,11 +31,26 @@
 
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity" />
-        <activity android:name=".WelcomeActivity" />
-        <activity android:name=".HomeActivity"
+        <activity android:name=".HomeActivityTheme1"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <!-- دیگر تنظیمات -->
-        </activity>        <activity android:name=".AddNoteActivity" />
+        </activity>
+        <activity android:name=".HomeActivityTheme2"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".HomeActivityTheme3"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".HomeActivityTheme4"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".HomeActivityTheme5"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".AddNoteActivity" />
+        <activity android:name=".ThemeSelectionActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
 
     </application>
 
