@@ -10,7 +10,7 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivityTheme4 : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var dbHelper: DatabaseHelper
@@ -24,7 +24,7 @@ class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home1)
+        setContentView(R.layout.activity_home4)
 
         dbHelper = DatabaseHelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
@@ -109,11 +109,11 @@ class HomeActivity : AppCompatActivity() {
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
-
-        findViewById<Button>(R.id.theme_button)?.setOnClickListener {
-            exitSelectionMode()
-            // اینجا کد مربوط به تغییر تم را اضافه کنید
+        findViewById<Button>(R.id.theme_button).setOnClickListener {
+            val intent = Intent(this, ThemeSelectionActivity::class.java)
+            startActivity(intent)
         }
+
     }
 
     private fun setupTouchListener() {
