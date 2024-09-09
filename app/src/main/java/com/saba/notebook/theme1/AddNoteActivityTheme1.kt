@@ -20,7 +20,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import java.io.ByteArrayOutputStream
 import java.util.*
 
-class AddNoteActivity : ComponentActivity() {
+class AddNoteActivityTheme1 : ComponentActivity() {
 
     private lateinit var titleEditText: EditText
     private lateinit var dateEditText: EditText
