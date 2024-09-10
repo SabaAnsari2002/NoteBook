@@ -7,13 +7,13 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 
-class RegisterActivity : ComponentActivity() {
+class RegisterActivityTheme2 : ComponentActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register1)
+        setContentView(R.layout.activity_register2)
 
         dbHelper = DatabaseHelper(this)
 
@@ -29,7 +29,7 @@ class RegisterActivity : ComponentActivity() {
                 val result = dbHelper.addUser(username, password)
                 if (result != -1L) {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LoginActivity::class.java))
+                    startActivity(Intent(this, LoginActivityTheme2::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "This username is already taken. Please choose another username.", Toast.LENGTH_SHORT).show()
