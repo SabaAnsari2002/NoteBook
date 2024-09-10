@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import androidx.activity.ComponentActivity
 
-class MainActivity : ComponentActivity() {
+class MainActivityTheme1 : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
         if (isLoggedIn) {
-            startActivity(Intent(this, HomeActivity::class.java))
+            startActivity(Intent(this, HomeActivityTheme1::class.java))
             finish()
             return
         }
@@ -26,11 +26,11 @@ class MainActivity : ComponentActivity() {
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnSignIn.setOnClickListener {
-            startActivity(Intent(this, RegisterActivity::class.java))
+            startActivity(Intent(this, RegisterActivityTheme1::class.java))
         }
 
         btnLogin.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            startActivity(Intent(this, LoginActivityTheme1::class.java))
         }
     }
 }
