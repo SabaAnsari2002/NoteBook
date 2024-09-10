@@ -8,14 +8,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 
-class LoginActivity : ComponentActivity() {
+class LoginActivityTheme5 : ComponentActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login1)
+        setContentView(R.layout.activity_login5)
 
         dbHelper = DatabaseHelper(this)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -32,7 +32,7 @@ class LoginActivity : ComponentActivity() {
                 if (dbHelper.getUser(username, password)) {
                     // Save login state
                     sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
-                    startActivity(Intent(this, HomeActivity::class.java))
+                    startActivity(Intent(this, HomeActivityTheme5::class.java))
                     finish()
                 } else {
                     Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
