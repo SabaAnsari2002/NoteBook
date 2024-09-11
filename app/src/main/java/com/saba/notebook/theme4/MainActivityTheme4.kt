@@ -17,7 +17,7 @@ class MainActivityTheme4 : ComponentActivity() {
         val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
         if (isLoggedIn) {
-            startActivity(Intent(this, HomeActivityTheme1::class.java))
+            startActivity(Intent(this, HomeActivityTheme4::class.java))
             finish()
             return
         }

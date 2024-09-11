@@ -13,9 +13,9 @@
         tools:targetApi="31">
 
         <activity
-            android:name=".SplashActivityTheme1"
+            android:name=".SplashActivity"
             android:exported="true"
-            android:theme="@style/Theme.NoteBook">
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -28,11 +28,6 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.NoteBook">
         </activity>
-
-        <activity android:name=".SplashActivityTheme2" />
-        <activity android:name=".SplashActivityTheme3" />
-        <activity android:name=".SplashActivityTheme4" />
-        <activity android:name=".SplashActivityTheme5" />
 
         <activity android:name=".MainActivityTheme2" />
         <activity android:name=".MainActivityTheme3" />

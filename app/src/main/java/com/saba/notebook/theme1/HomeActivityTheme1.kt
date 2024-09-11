@@ -201,12 +201,15 @@ class HomeActivityTheme1 : AppCompatActivity() {
                 .setTitle("Exit Application")
                 .setMessage("Are you sure you want to exit the application?")
                 .setPositiveButton("Yes") { _, _ ->
-                    super.onBackPressed()
+                    finishAffinity() // بستن کامل برنامه
+                    super.onBackPressed() // فراخوانی onBackPressed از کلاس پایه برای جلوگیری از خطا
                 }
                 .setNegativeButton("No", null)
                 .show()
         }
     }
+
+
 
     inner class NoteAdapter(context: android.content.Context, resource: Int, objects: List<String>) :
         ArrayAdapter<String>(context, resource, objects) {
