@@ -28,7 +28,12 @@ class HomeActivityTheme2 : AppCompatActivity() {
 
         dbHelper = DatabaseHelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
-
+        if (userId == -1) {
+            // If USER_ID is not provided, redirect to login
+            startActivity(Intent(this, LoginActivityTheme2::class.java))
+            finish()
+            return
+        }
         notesListView = findViewById(R.id.notes_list)
         notesList = dbHelper.getNotesByUserId(userId).toMutableList()
         notesAdapter = NoteAdapter(this, R.layout.note_list_item, notesList)

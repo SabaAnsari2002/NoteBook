@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 class ThemeSelectionActivity : AppCompatActivity() {
 
     private lateinit var sharedPreferences: SharedPreferences
+    private var userId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,6 +19,18 @@ class ThemeSelectionActivity : AppCompatActivity() {
         // دسترسی به SharedPreferences برای ذخیره و دریافت اطلاعات مربوط به تم و کوین‌ها
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
+        // دریافت userId از Intent یا SharedPreferences
+        userId = intent.getIntExtra("USER_ID", -1)
+        if (userId == -1) {
+            userId = sharedPreferences.getInt("userId", -1)
+        }
+
+        if (userId == -1) {
+            // اگر userId موجود نباشد، به صفحه ورود برگردید
+            startActivity(Intent(this, LoginActivityTheme1::class.java))
+            finish()
+            return
+        }
 
         // تنظیم کلیک لیسنر برای هر تم
         findViewById<LinearLayout>(R.id.theme1).setOnClickListener {
@@ -54,9 +67,10 @@ class ThemeSelectionActivity : AppCompatActivity() {
             else -> Intent(this, HomeActivityTheme1::class.java)
         }
 
+        // اضافه کردن userId به Intent
+        intent.putExtra("USER_ID", userId)
+
         startActivity(intent)
         finish()
     }
-
-
 }

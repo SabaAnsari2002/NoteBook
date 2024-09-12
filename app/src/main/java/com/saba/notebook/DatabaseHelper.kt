@@ -9,7 +9,7 @@ import android.util.Log
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        private const val DATABASE_VERSION = 7
+        private const val DATABASE_VERSION = 8
         private const val DATABASE_NAME = "NoteBook"
         private const val TABLE_USERS = "users"
         private const val TABLE_NOTES = "notes"
@@ -138,7 +138,17 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.close()
         return result
     }
-
+    fun getUserId(username: String): Int {
+        val db = this.readableDatabase
+        val cursor = db.query(TABLE_USERS, arrayOf(KEY_ID), "$KEY_USERNAME=?",
+            arrayOf(username), null, null, null)
+        var userId = -1
+        if (cursor.moveToFirst()) {
+            userId = cursor.getInt(cursor.getColumnIndexOrThrow(KEY_ID))
+        }
+        cursor.close()
+        return userId
+    }
     fun getNoteText(userId: Int, title: String): String? {
         val db = this.readableDatabase
         val cursor = db.query(TABLE_NOTES, arrayOf(KEY_NOTE_TEXT), "$KEY_USER_ID=? AND $KEY_NOTE_TITLE=?",
