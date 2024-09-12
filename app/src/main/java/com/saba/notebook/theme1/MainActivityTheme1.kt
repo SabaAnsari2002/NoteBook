@@ -14,11 +14,19 @@ class MainActivityTheme1 : ComponentActivity() {
         setContentView(R.layout.activity_main1)
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false)
 
-        if (isLoggedIn) {
-            startActivity(Intent(this, HomeActivityTheme1::class.java))
-            finish()
+        if (sharedPreferences.getBoolean("isLoggedIn", false)) {
+            val userId = sharedPreferences.getInt("userId", -1)
+            if (userId != -1) {
+                val intent = Intent(this, HomeActivityTheme1::class.java)
+                intent.putExtra("USER_ID", userId)
+                startActivity(intent)
+                finish()
+            } else {
+                // اگر userId پیدا نشد، به صفحه ورود هدایت کنید
+                startActivity(Intent(this, LoginActivityTheme1::class.java))
+                finish()
+            }
             return
         }
 

@@ -30,15 +30,26 @@ class LoginActivityTheme3 : ComponentActivity() {
 
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 if (dbHelper.getUser(username, password)) {
-                    // Save login state
-                    sharedPreferences.edit().putBoolean("isLoggedIn", true).apply()
-                    startActivity(Intent(this, HomeActivityTheme3::class.java))
-                    finish()
+                    val userId = dbHelper.getUserId(username)
+                    if (userId != -1) {
+                        // ذخیره وضعیت ورود و شناسه کاربر
+                        sharedPreferences.edit()
+                            .putBoolean("isLoggedIn", true)
+                            .putInt("userId", userId)
+                            .apply()
+
+                        val intent = Intent(this, HomeActivityTheme3::class.java)
+                        intent.putExtra("USER_ID", userId)
+                        startActivity(intent)
+                        finish()
+                    } else {
+                        Toast.makeText(this, "خطا در بازیابی شناسه کاربر", Toast.LENGTH_SHORT).show()
+                    }
                 } else {
-                    Toast.makeText(this, "Invalid credentials", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "نام کاربری یا رمز عبور نامعتبر است", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "لطفاً تمام فیلدها را پر کنید", Toast.LENGTH_SHORT).show()
             }
         }
     }
