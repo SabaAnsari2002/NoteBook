@@ -110,10 +110,21 @@ class HomeActivityTheme5 : AppCompatActivity() {
         val btnLogout = findViewById<Button>(R.id.logout_button)
         btnLogout.setOnClickListener {
             exitSelectionMode()
-            sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
-            startActivity(Intent(this, MainActivityTheme5::class.java))
-            finish()
+
+            // نمایش دیالوگ تأیید لاگ‌اوت
+            AlertDialog.Builder(this)
+                .setTitle("Log Out")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes") { _, _ ->
+                    // انجام عملیات لاگ‌اوت
+                    sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
+                    startActivity(Intent(this, MainActivityTheme1::class.java))
+                    finish()
+                }
+                .setNegativeButton("No", null)  // بستن دیالوگ بدون انجام لاگ‌اوت
+                .show()
         }
+
         findViewById<Button>(R.id.theme_button).setOnClickListener {
             val intent = Intent(this, ThemeSelectionActivity::class.java)
             startActivity(intent)
