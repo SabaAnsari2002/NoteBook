@@ -33,18 +33,21 @@
         <activity android:name=".MainActivityTheme3" />
         <activity android:name=".MainActivityTheme4" />
         <activity android:name=".MainActivityTheme5" />
+        <activity android:name=".MainActivityTheme6" />
 
         <activity android:name=".RegisterActivityTheme1" />
         <activity android:name=".RegisterActivityTheme2" />
         <activity android:name=".RegisterActivityTheme3" />
         <activity android:name=".RegisterActivityTheme4" />
         <activity android:name=".RegisterActivityTheme5" />
+        <activity android:name=".RegisterActivityTheme6" />
 
         <activity android:name=".LoginActivityTheme1" />
         <activity android:name=".LoginActivityTheme2" />
         <activity android:name=".LoginActivityTheme3" />
         <activity android:name=".LoginActivityTheme4" />
         <activity android:name=".LoginActivityTheme5" />
+        <activity android:name=".LoginActivityTheme6" />
 
         <activity android:name=".HomeActivityTheme1"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -61,11 +64,16 @@
         <activity android:name=".HomeActivityTheme5"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+        <activity android:name=".HomeActivityTheme6"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+
         <activity android:name=".AddNoteActivityTheme1" />
         <activity android:name=".AddNoteActivityTheme2" />
         <activity android:name=".AddNoteActivityTheme3" />
         <activity android:name=".AddNoteActivityTheme4" />
         <activity android:name=".AddNoteActivityTheme5" />
+        <activity android:name=".AddNoteActivityTheme6" />
 
         <activity android:name=".ThemeSelectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">

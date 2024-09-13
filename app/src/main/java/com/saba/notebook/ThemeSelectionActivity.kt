@@ -1,5 +1,6 @@
 package com.saba.notebook
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -12,6 +13,7 @@ class ThemeSelectionActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Int = -1
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_theme_selection)
@@ -52,6 +54,9 @@ class ThemeSelectionActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.theme5).setOnClickListener {
             applyTheme("theme5")
         }
+        findViewById<LinearLayout>(R.id.theme6).setOnClickListener {
+            applyTheme("theme6")
+        }
     }
 
     private fun applyTheme(themeName: String) {
@@ -64,6 +69,8 @@ class ThemeSelectionActivity : AppCompatActivity() {
             "theme3" -> Intent(this, HomeActivityTheme3::class.java)
             "theme4" -> Intent(this, HomeActivityTheme4::class.java)
             "theme5" -> Intent(this, HomeActivityTheme5::class.java)
+            "theme6" -> Intent(this, HomeActivityTheme6::class.java)
+
             else -> Intent(this, HomeActivityTheme1::class.java)
         }
 

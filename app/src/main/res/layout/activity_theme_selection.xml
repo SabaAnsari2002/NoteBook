@@ -204,6 +204,41 @@
                 android:textColor="#000000"
                 android:gravity="center"/>
 
+        </LinearLayout>
+
+        <!-- Theme -->
+        <LinearLayout
+            android:id="@+id/theme6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/add_note6"
+                    android:contentDescription="Theme6" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="theme6"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
 
         </LinearLayout>
     </GridLayout>
