@@ -57,6 +57,17 @@ class ThemeSelectionActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.theme6).setOnClickListener {
             applyTheme("theme6")
         }
+        findViewById<LinearLayout>(R.id.theme9).setOnClickListener {
+            // ذخیره تم جدید در SharedPreferences
+            sharedPreferences.edit().putString("SELECTED_THEME", "theme9").apply()
+
+            // باز کردن صفحه ThemeCustomizationActivity
+            val intent = Intent(this, ThemeCustomizationActivity::class.java)
+            intent.putExtra("USER_ID", userId) // در صورت نیاز userId را ارسال کنید
+            startActivity(intent)
+        }
+
+
     }
 
     private fun applyTheme(themeName: String) {
@@ -70,6 +81,7 @@ class ThemeSelectionActivity : AppCompatActivity() {
             "theme4" -> Intent(this, HomeActivityTheme4::class.java)
             "theme5" -> Intent(this, HomeActivityTheme5::class.java)
             "theme6" -> Intent(this, HomeActivityTheme6::class.java)
+            "theme9" -> Intent(this, HomeActivityTheme9::class.java)
 
             else -> Intent(this, HomeActivityTheme1::class.java)
         }
