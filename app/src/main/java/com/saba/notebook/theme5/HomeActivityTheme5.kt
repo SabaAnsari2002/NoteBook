@@ -118,7 +118,7 @@ class HomeActivityTheme5 : AppCompatActivity() {
                 .setPositiveButton("Yes") { _, _ ->
                     // انجام عملیات لاگ‌اوت
                     sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
-                    startActivity(Intent(this, MainActivityTheme1::class.java))
+                    startActivity(Intent(this, MainActivityTheme5::class.java))
                     finish()
                 }
                 .setNegativeButton("No", null)  // بستن دیالوگ بدون انجام لاگ‌اوت
