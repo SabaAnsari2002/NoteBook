@@ -34,6 +34,8 @@
         <activity android:name=".MainActivityTheme4" />
         <activity android:name=".MainActivityTheme5" />
         <activity android:name=".MainActivityTheme6" />
+        <activity android:name=".MainActivityTheme9" />
+        <activity android:name=".MainActivityTheme10" />
 
         <activity android:name=".RegisterActivityTheme1" />
         <activity android:name=".RegisterActivityTheme2" />
@@ -41,6 +43,8 @@
         <activity android:name=".RegisterActivityTheme4" />
         <activity android:name=".RegisterActivityTheme5" />
         <activity android:name=".RegisterActivityTheme6" />
+        <activity android:name=".RegisterActivityTheme9" />
+        <activity android:name=".RegisterActivityTheme10" />
 
         <activity android:name=".LoginActivityTheme1" />
         <activity android:name=".LoginActivityTheme2" />
@@ -48,6 +52,8 @@
         <activity android:name=".LoginActivityTheme4" />
         <activity android:name=".LoginActivityTheme5" />
         <activity android:name=".LoginActivityTheme6" />
+        <activity android:name=".LoginActivityTheme9" />
+        <activity android:name=".LoginActivityTheme10" />
 
         <activity android:name=".HomeActivityTheme1"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -67,6 +73,12 @@
         <activity android:name=".HomeActivityTheme6"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
+        <activity android:name=".HomeActivityTheme9"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".HomeActivityTheme10"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
 
         <activity android:name=".AddNoteActivityTheme1" />
         <activity android:name=".AddNoteActivityTheme2" />
@@ -74,11 +86,19 @@
         <activity android:name=".AddNoteActivityTheme4" />
         <activity android:name=".AddNoteActivityTheme5" />
         <activity android:name=".AddNoteActivityTheme6" />
+        <activity android:name=".AddNoteActivityTheme9" />
+        <activity android:name=".AddNoteActivityTheme10" />
 
         <activity android:name=".ThemeSelectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 
+        <activity android:name=".ThemeCustomizationActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
+        <activity android:name=".ImagesActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
 
     </application>
 
