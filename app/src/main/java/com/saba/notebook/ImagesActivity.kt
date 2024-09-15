@@ -4,6 +4,8 @@ import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.os.Handler
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +17,10 @@ class ImagesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
 
+    companion object {
+        private const val PREF_IMAGES_LOADED = "images_loaded"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_images)
@@ -24,15 +30,29 @@ class ImagesActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
 
-        // Add images from drawable to database (one-time setup)
-        addDrawableImagesToDatabase()
+        // Check if images have been loaded before
+        val imagesLoaded = sharedPreferences.getBoolean(PREF_IMAGES_LOADED, false)
 
+        if (!imagesLoaded) {
+            // Add images from drawable to database (one-time setup)
+            addDrawableImagesToDatabase()
+
+            // Mark images as loaded
+            sharedPreferences.edit().putBoolean(PREF_IMAGES_LOADED, true).apply()
+        }
+
+        // Load images from database
         val imageList = dbHelper.getAllImages()
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
             // Handle image selection
             saveSelectedImageToPreferences(selectedImage)
-            finish() // Close activity after selecting an image
+            showSuccessMessage()
+
+            // Delay before closing the activity
+            Handler().postDelayed({
+                finish()
+            }, 1500) // 1.5 seconds delay
         }
     }
 
@@ -56,5 +76,9 @@ class ImagesActivity : AppCompatActivity() {
         val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
         prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
         prefsEditor.apply()
+    }
+
+    private fun showSuccessMessage() {
+        Toast.makeText(this, "Image successfully selected for splash screen", Toast.LENGTH_SHORT).show()
     }
 }
