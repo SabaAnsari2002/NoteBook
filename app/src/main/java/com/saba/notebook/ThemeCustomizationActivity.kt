@@ -55,6 +55,37 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             intent.putExtra("IMAGE_TYPE", "MAIN")
             startActivity(intent)
         }
+
+        val registerButton = findViewById<LinearLayout>(R.id.register)
+        registerButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isTheme9Customized", true)
+                putString("SELECTED_REGISTER_IMAGE", "your_register_image_data_here") // ذخیره تصویر رجیستر
+                apply()
+            }
+
+            // هدایت به ImagesActivity برای انتخاب عکس برای رجیستر
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "REGISTER")
+            startActivity(intent)
+        }
+
+        val loginButton = findViewById<LinearLayout>(R.id.login)
+        loginButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isTheme9Customized", true)
+                putString("SELECTED_LOGIN_IMAGE", "your_login_image_data_here") // ذخیره تصویر رجیستر
+                apply()
+            }
+
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "LOGIN")
+            startActivity(intent)
+        }
+
+
     }
 
     override fun onBackPressed() {

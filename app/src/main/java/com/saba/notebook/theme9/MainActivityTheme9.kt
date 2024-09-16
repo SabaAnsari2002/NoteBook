@@ -15,12 +15,18 @@ class MainActivityTheme9 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main9)
 
+        // دسترسی به SharedPreferences برای بررسی تم و تصویر انتخاب شده
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
+        // بررسی اینکه آیا تصویر برای تم شخصی‌سازی شده انتخاب شده است
+        val isThemeCustomized = sharedPreferences.getBoolean("isTheme9Customized", false)
         val selectedMainImage = sharedPreferences.getString("SELECTED_MAIN_IMAGE", null)
+        val selectedRegisterImage = sharedPreferences.getString("SELECTED_REGISTER_IMAGE", null)
+        val selectedLoginImage = sharedPreferences.getString("SELECTED_LOGIN_IMAGE", null)
 
-        if (selectedMainImage != null) {
-            // Decode and set the image in the ImageView
+
+        if (isThemeCustomized && selectedMainImage != null) {
+            // اگر تم شخصی‌سازی شده و تصویر انتخاب شده باشد، تصویر را نمایش دهید
             val imageByteArray = android.util.Base64.decode(selectedMainImage, android.util.Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
             val imageView = findViewById<ImageView>(R.id.mainImageView)
@@ -35,22 +41,34 @@ class MainActivityTheme9 : ComponentActivity() {
                 startActivity(intent)
                 finish()
             } else {
-                // Redirect to login page if userId is not found
+                // اگر کاربر لاگین نکرده است، به صفحه لاگین بروید
                 startActivity(Intent(this, LoginActivityTheme9::class.java))
                 finish()
             }
             return
         }
 
+        // تنظیم دکمه‌های ثبت‌نام و ورود
         val btnSignIn = findViewById<Button>(R.id.btnRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnSignIn.setOnClickListener {
-            startActivity(Intent(this, RegisterActivityTheme9::class.java))
+            // بررسی انتخاب تصویر برای رجیستر
+            if (selectedRegisterImage != null) {
+                // اگر تصویری برای رجیستر انتخاب شده، به RegisterActivityTheme9 بروید
+                startActivity(Intent(this, RegisterActivityTheme9::class.java))
+            } else {
+                // در غیر این صورت، به RegisterActivityTheme10 بروید
+                startActivity(Intent(this, RegisterActivityTheme10::class.java))
+            }
         }
 
         btnLogin.setOnClickListener {
-            startActivity(Intent(this, LoginActivityTheme9::class.java))
+            if (selectedLoginImage != null) {
+                startActivity(Intent(this, LoginActivityTheme9::class.java))
+            } else {
+                startActivity(Intent(this, LoginActivityTheme10::class.java))
+            }
         }
     }
 }

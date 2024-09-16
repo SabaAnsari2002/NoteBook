@@ -79,19 +79,31 @@ class ImagesActivity : AppCompatActivity() {
 
         if (imageType == "MAIN") {
             prefsEditor.putString("SELECTED_MAIN_IMAGE", base64Image)
+
+        } else if (imageType == "REGISTER") {
+            prefsEditor.putString("SELECTED_REGISTER_IMAGE", base64Image)
+
+        } else if (imageType == "LOGIN") {
+            prefsEditor.putString("SELECTED_LOGIN_IMAGE", base64Image)
+
         } else {
             prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
         }
+
 
         prefsEditor.apply()
     }
 
     private fun showSuccessMessage(imageType: String) {
-        val messageText = if (imageType == "MAIN") {
-            "Image successfully selected for main screen"
-        } else {
-            "Image successfully selected for splash screen"
+        val messageText = when (imageType) {
+            "MAIN" -> "Image successfully selected for main screen"
+            "SPLASH" -> "Image successfully selected for splash screen"
+            "REGISTER" -> "Image successfully selected for register screen"
+            "LOGIN" -> "Image successfully selected for login screen"
+
+            else -> "Image successfully selected"
         }
         Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()
     }
+
 }
