@@ -30,6 +30,8 @@ class ImagesActivity : AppCompatActivity() {
 
         recyclerView = findViewById(R.id.recyclerView)
 
+        val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
+
         // Check if images have been loaded before
         val imagesLoaded = sharedPreferences.getBoolean(PREF_IMAGES_LOADED, false)
 
@@ -46,8 +48,8 @@ class ImagesActivity : AppCompatActivity() {
         recyclerView.layoutManager = GridLayoutManager(this, 2)
         recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
             // Handle image selection
-            saveSelectedImageToPreferences(selectedImage)
-            showSuccessMessage()
+            saveSelectedImageToPreferences(selectedImage, imageType)
+            showSuccessMessage(imageType)
 
             // Delay before closing the activity
             Handler().postDelayed({
@@ -70,15 +72,26 @@ class ImagesActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveSelectedImageToPreferences(imageByteArray: ByteArray) {
+    private fun saveSelectedImageToPreferences(imageByteArray: ByteArray, imageType: String) {
         val prefsEditor = sharedPreferences.edit()
         // Convert ByteArray to Base64 String for storage
         val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
-        prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
+
+        if (imageType == "MAIN") {
+            prefsEditor.putString("SELECTED_MAIN_IMAGE", base64Image)
+        } else {
+            prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
+        }
+
         prefsEditor.apply()
     }
 
-    private fun showSuccessMessage() {
-        Toast.makeText(this, "Image successfully selected for splash screen", Toast.LENGTH_SHORT).show()
+    private fun showSuccessMessage(imageType: String) {
+        val messageText = if (imageType == "MAIN") {
+            "Image successfully selected for main screen"
+        } else {
+            "Image successfully selected for splash screen"
+        }
+        Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()
     }
 }

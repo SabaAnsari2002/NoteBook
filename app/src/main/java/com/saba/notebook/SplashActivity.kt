@@ -23,14 +23,12 @@ class SplashActivity : AppCompatActivity() {
         val selectedSplashImage = sharedPreferences.getString("SELECTED_SPLASH_IMAGE", null)
 
         if (selectedTheme == "theme10" && isTheme9Customized && selectedSplashImage != null) {
-            // Display the custom image for theme 9
             setContentView(R.layout.activity_splash9)
             val imageView = findViewById<ImageView>(R.id.splashImageView)
             val imageByteArray = android.util.Base64.decode(selectedSplashImage, android.util.Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
             imageView.setImageBitmap(bitmap)
         } else {
-            // Handle other themes
             when (selectedTheme) {
                 "theme2" -> setContentView(R.layout.activity_splash2)
                 "theme3" -> setContentView(R.layout.activity_splash3)
@@ -49,7 +47,8 @@ class SplashActivity : AppCompatActivity() {
                 "theme4" -> Intent(this, MainActivityTheme4::class.java)
                 "theme5" -> Intent(this, MainActivityTheme5::class.java)
                 "theme6" -> Intent(this, MainActivityTheme6::class.java)
-                "theme9", "theme10" -> Intent(this, MainActivityTheme10::class.java)
+                "theme9" -> Intent(this, MainActivityTheme9::class.java)
+                "theme10" -> Intent(this, MainActivityTheme10::class.java)
                 else -> Intent(this, MainActivityTheme1::class.java)
             }
             startActivity(intent)
