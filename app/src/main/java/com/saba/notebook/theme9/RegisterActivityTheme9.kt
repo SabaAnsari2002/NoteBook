@@ -47,7 +47,17 @@ class RegisterActivityTheme9 : ComponentActivity() {
                 val result = dbHelper.addUser(username, password)
                 if (result != -1L) {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LoginActivityTheme9::class.java))
+
+                    // بررسی شخصی‌سازی تم برای صفحه لاگین
+                    val isLoginCustomized = sharedPreferences.getBoolean("isLoginCustomized", false)
+
+                    // اگر تم لاگین شخصی‌سازی شده بود، کاربر به صفحه LoginActivityTheme9 می‌رود
+                    // در غیر این صورت، به صفحه LoginActivityTheme10 هدایت می‌شود
+                    if (isLoginCustomized) {
+                        startActivity(Intent(this, LoginActivityTheme9::class.java))
+                    } else {
+                        startActivity(Intent(this, LoginActivityTheme10::class.java))
+                    }
                     finish()
                 } else {
                     Toast.makeText(this, "This username is already taken. Please choose another username.", Toast.LENGTH_SHORT).show()
