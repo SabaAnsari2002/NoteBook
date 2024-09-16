@@ -74,8 +74,8 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         val loginButton = findViewById<LinearLayout>(R.id.login)
         loginButton.setOnClickListener {
             sharedPreferences.edit().apply {
-                putBoolean("isTheme9Customized", true)
-                putString("SELECTED_LOGIN_IMAGE", "your_login_image_data_here") // ذخیره تصویر رجیستر
+                putBoolean("isLoginCustomized", true) // شخصی‌سازی صفحه لاگین
+                putString("SELECTED_LOGIN_IMAGE", "your_login_image_data_here") // ذخیره تصویر لاگین
                 apply()
             }
 
@@ -84,6 +84,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             intent.putExtra("IMAGE_TYPE", "LOGIN")
             startActivity(intent)
         }
+
 
 
     }
