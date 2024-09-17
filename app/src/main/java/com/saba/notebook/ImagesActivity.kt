@@ -82,6 +82,8 @@ class ImagesActivity : AppCompatActivity() {
             "REGISTER" -> prefsEditor.putString("SELECTED_REGISTER_IMAGE", base64Image)
             "LOGIN" -> prefsEditor.putString("SELECTED_LOGIN_IMAGE", base64Image)
             "HOME" -> prefsEditor.putString("SELECTED_HOME_IMAGE", base64Image)
+            "ADD_NOTE" -> prefsEditor.putString("SELECTED_ADD_NOTE_IMAGE", base64Image)
+
             else -> prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
         }
 
@@ -95,6 +97,8 @@ class ImagesActivity : AppCompatActivity() {
             "REGISTER" -> "Image successfully selected for register screen"
             "LOGIN" -> "Image successfully selected for login screen"
             "HOME" -> "Image successfully selected for home screen"
+            "ADD_NOTE" -> "Image successfully selected for add note screen"
+
             else -> "Image successfully selected"
         }
         Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()

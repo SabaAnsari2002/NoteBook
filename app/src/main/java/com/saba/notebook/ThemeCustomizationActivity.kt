@@ -100,6 +100,20 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val addNoteButton = findViewById<LinearLayout>(R.id.add_note)
+        addNoteButton.setOnClickListener {
+            // ذخیره اطلاعات شخصی‌سازی صفحه افزودن نوت در SharedPreferences
+            sharedPreferences.edit().apply {
+                putBoolean("isAddNoteCustomized", true) // مشخص کردن اینکه صفحه افزودن نوت شخصی‌سازی شده
+                apply()
+            }
+
+            // هدایت به صفحه‌ی انتخاب تصویر برای افزودن نوت
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)  // انتقال userId
+            intent.putExtra("IMAGE_TYPE", "ADD_NOTE") // تعیین نوع تصویر انتخابی برای افزودن نوت
+            startActivity(intent)
+        }
 
 
     }
