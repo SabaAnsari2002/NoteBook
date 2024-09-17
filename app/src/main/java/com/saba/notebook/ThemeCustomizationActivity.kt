@@ -86,6 +86,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
 
 
+
         val homeButton = findViewById<LinearLayout>(R.id.home)
         homeButton.setOnClickListener {
             sharedPreferences.edit().apply {
@@ -106,12 +107,22 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        sharedPreferences.edit().putString("SELECTED_THEME", "theme10").apply()
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
 
-        val intent = Intent(this, HomeActivityTheme10::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("USER_ID", userId)
-        startActivity(intent)
+        if (isHomeCustomized) {
+            // If home is customized, launch HomeActivityTheme9
+            val intent = Intent(this, HomeActivityTheme9::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("USER_ID", userId)  // Make sure userId is passed correctly
+            startActivity(intent)
+        } else {
+            // If home is not customized, launch HomeActivityTheme10
+            val intent = Intent(this, HomeActivityTheme10::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("USER_ID", userId)  // Make sure userId is passed correctly
+            startActivity(intent)
+        }
         finish()
     }
 }
