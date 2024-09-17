@@ -54,7 +54,7 @@ class ImagesActivity : AppCompatActivity() {
             // Delay before closing the activity
             Handler().postDelayed({
                 finish()
-            }, 1500) // 1.5 seconds delay
+            }, 500) // 0.5 seconds delay
         }
     }
 
@@ -77,19 +77,13 @@ class ImagesActivity : AppCompatActivity() {
         // Convert ByteArray to Base64 String for storage
         val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
 
-        if (imageType == "MAIN") {
-            prefsEditor.putString("SELECTED_MAIN_IMAGE", base64Image)
-
-        } else if (imageType == "REGISTER") {
-            prefsEditor.putString("SELECTED_REGISTER_IMAGE", base64Image)
-
-        } else if (imageType == "LOGIN") {
-            prefsEditor.putString("SELECTED_LOGIN_IMAGE", base64Image)
-
-        } else {
-            prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
+        when (imageType) {
+            "MAIN" -> prefsEditor.putString("SELECTED_MAIN_IMAGE", base64Image)
+            "REGISTER" -> prefsEditor.putString("SELECTED_REGISTER_IMAGE", base64Image)
+            "LOGIN" -> prefsEditor.putString("SELECTED_LOGIN_IMAGE", base64Image)
+            "HOME" -> prefsEditor.putString("SELECTED_HOME_IMAGE", base64Image)
+            else -> prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
         }
-
 
         prefsEditor.apply()
     }
@@ -100,10 +94,9 @@ class ImagesActivity : AppCompatActivity() {
             "SPLASH" -> "Image successfully selected for splash screen"
             "REGISTER" -> "Image successfully selected for register screen"
             "LOGIN" -> "Image successfully selected for login screen"
-
+            "HOME" -> "Image successfully selected for home screen"
             else -> "Image successfully selected"
         }
         Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()
     }
-
 }

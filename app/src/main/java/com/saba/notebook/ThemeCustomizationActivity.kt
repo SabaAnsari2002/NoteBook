@@ -86,8 +86,23 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
 
 
+        val homeButton = findViewById<LinearLayout>(R.id.home)
+        homeButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isHomeCustomized", true)
+                apply()
+            }
+
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "HOME")
+            startActivity(intent)
+        }
+
+
 
     }
+
 
     override fun onBackPressed() {
         super.onBackPressed()
