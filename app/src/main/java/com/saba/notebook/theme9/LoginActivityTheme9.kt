@@ -51,7 +51,12 @@ class LoginActivityTheme9 : ComponentActivity() {
                             .putInt("userId", userId)
                             .apply()
 
-                        val intent = Intent(this, HomeActivityTheme9::class.java)
+                        val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
+                        val intent = if (isHomeCustomized) {
+                            Intent(this, HomeActivityTheme9::class.java)
+                        } else {
+                            Intent(this, HomeActivityTheme10::class.java)
+                        }
                         intent.putExtra("USER_ID", userId)
                         startActivity(intent)
                         finish()
