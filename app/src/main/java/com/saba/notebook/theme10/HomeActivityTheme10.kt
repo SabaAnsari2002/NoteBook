@@ -100,11 +100,23 @@ class HomeActivityTheme10 : AppCompatActivity() {
 
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
-            exitSelectionMode()
-            val intent = Intent(this, AddNoteActivityTheme10::class.java)
+            exitSelectionMode() // خروج از حالت انتخاب (اگر چنین عملکردی در برنامه وجود دارد)
+
+            // بررسی اینکه آیا صفحه افزودن نوت شخصی‌سازی شده است یا نه
+            val isCustomized = sharedPreferences.getBoolean("isAddNoteCustomized", false)
+
+            // اجرای فعالیت مناسب بر اساس شخصی‌سازی
+            val intent = if (isCustomized) {
+                Intent(this, AddNoteActivityTheme9::class.java) // اگر شخصی‌سازی شده، فعالیت مربوط به Theme9 اجرا می‌شود
+            } else {
+                Intent(this, AddNoteActivityTheme10::class.java) // اگر شخصی‌سازی نشده، فعالیت مربوط به Theme10 اجرا می‌شود
+            }
+
+            // انتقال userId به فعالیت افزودن نوت
             intent.putExtra("USER_ID", userId)
-            startActivityForResult(intent, 1)
+            startActivityForResult(intent, 1) // اجرای فعالیت با امکان بازگشت نتیجه
         }
+
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val btnLogout = findViewById<Button>(R.id.logout_button)

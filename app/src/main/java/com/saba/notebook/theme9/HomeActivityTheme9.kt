@@ -127,10 +127,21 @@ class HomeActivityTheme9 : AppCompatActivity() {
 
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
-            exitSelectionMode()
-            val intent = Intent(this, AddNoteActivityTheme9::class.java)
+            exitSelectionMode() // خروج از حالت انتخاب (اگر چنین عملکردی در برنامه وجود دارد)
+
+            // بررسی اینکه آیا صفحه افزودن نوت شخصی‌سازی شده است یا نه
+            val isCustomized = sharedPreferences.getBoolean("isAddNoteCustomized", false)
+
+            // اجرای فعالیت مناسب بر اساس شخصی‌سازی
+            val intent = if (isCustomized) {
+                Intent(this, AddNoteActivityTheme9::class.java) // اگر شخصی‌سازی شده، فعالیت مربوط به Theme9 اجرا می‌شود
+            } else {
+                Intent(this, AddNoteActivityTheme10::class.java) // اگر شخصی‌سازی نشده، فعالیت مربوط به Theme10 اجرا می‌شود
+            }
+
+            // انتقال userId به فعالیت افزودن نوت
             intent.putExtra("USER_ID", userId)
-            startActivityForResult(intent, 1)
+            startActivityForResult(intent, 1) // اجرای فعالیت با امکان بازگشت نتیجه
         }
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -152,7 +163,6 @@ class HomeActivityTheme9 : AppCompatActivity() {
                 .show()
         }
 
-
         findViewById<Button>(R.id.theme_button).setOnClickListener {
             val intent = Intent(this, ThemeSelectionActivity::class.java)
             startActivity(intent)
@@ -171,6 +181,7 @@ class HomeActivityTheme9 : AppCompatActivity() {
             false
         }
     }
+
 
     private fun exitSelectionMode() {
         if (isSelectionMode) {
