@@ -7,23 +7,35 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.ComponentActivity
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.widget.RelativeLayout
 
 class MainActivityTheme9 : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var relativeLayout: RelativeLayout
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main9)
 
-        // دسترسی به SharedPreferences برای بررسی تم و تصویر انتخاب شده
+        // ابتدا sharedPreferences را مقداردهی کنید
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
+        relativeLayout = findViewById(R.id.relativeLayout) // Root layout
+
+        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+        if (savedColor != null) {
+            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        }
 
         // بررسی اینکه آیا تصویر برای تم شخصی‌سازی شده انتخاب شده است
         val isThemeCustomized = sharedPreferences.getBoolean("isTheme9Customized", false)
         val selectedMainImage = sharedPreferences.getString("SELECTED_MAIN_IMAGE", null)
         val selectedRegisterImage = sharedPreferences.getString("SELECTED_REGISTER_IMAGE", null)
         val selectedLoginImage = sharedPreferences.getString("SELECTED_LOGIN_IMAGE", null)
-
 
         if (isThemeCustomized && selectedMainImage != null) {
             // اگر تم شخصی‌سازی شده و تصویر انتخاب شده باشد، تصویر را نمایش دهید

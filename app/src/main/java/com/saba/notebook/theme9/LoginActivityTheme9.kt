@@ -10,11 +10,16 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.widget.RelativeLayout
 
 class LoginActivityTheme9 : ComponentActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var relativeLayout: RelativeLayout
+    @SuppressLint("MissingInflatedId")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +27,13 @@ class LoginActivityTheme9 : ComponentActivity() {
 
         dbHelper = DatabaseHelper(this)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        relativeLayout = findViewById(R.id.relativeLayout) // Root layout
 
+        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+        if (savedColor != null) {
+            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        }
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)

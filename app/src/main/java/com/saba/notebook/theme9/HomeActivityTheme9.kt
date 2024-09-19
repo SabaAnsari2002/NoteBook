@@ -12,6 +12,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.widget.RelativeLayout
 
 class HomeActivityTheme9 : AppCompatActivity() {
 
@@ -25,10 +28,24 @@ class HomeActivityTheme9 : AppCompatActivity() {
     private var userId: Int = -1
     private val selectedNotes = mutableSetOf<Int>()
     private var isSelectionMode = false
+    private lateinit var relativeLayout: RelativeLayout
+
+    @SuppressLint("MissingInflatedId")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home9)
+
+        // مقداردهی sharedPreferences
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
+        relativeLayout = findViewById(R.id.relativeLayout)
+
+        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+        if (savedColor != null) {
+            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        }
 
         dbHelper = DatabaseHelper(this)
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
