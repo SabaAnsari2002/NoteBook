@@ -6,6 +6,11 @@ import android.os.Bundle
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+import android.graphics.Color
+import android.widget.Toast
+
 class ThemeCustomizationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Int = -1
@@ -115,8 +120,40 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
+        val backgroundColorButton = findViewById<LinearLayout>(R.id.background_color)
+        backgroundColorButton.setOnClickListener {
+            showColorPickerDialog()
+        }
     }
+
+    private fun showColorPickerDialog() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ پس‌زمینه")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveBackgroundColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+
+    private fun saveBackgroundColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("BACKGROUND_COLOR", hexColor)
+            apply()
+        }
+    }
+
+    private fun showColorSelectedMessage(hexColor: String) {
+        Toast.makeText(this, "رنگ $hexColor انتخاب شد", Toast.LENGTH_SHORT).show()
+    }
+
+
+
 
 
     override fun onBackPressed() {

@@ -3,10 +3,12 @@ package com.saba.notebook
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 
 class SplashActivity : AppCompatActivity() {
@@ -22,12 +24,21 @@ class SplashActivity : AppCompatActivity() {
         val isTheme9Customized = sharedPreferences.getBoolean("isTheme9Customized", false)
         val selectedSplashImage = sharedPreferences.getString("SELECTED_SPLASH_IMAGE", null)
 
+        // Load the saved background color if available
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+
         if (selectedTheme == "theme10" && isTheme9Customized && selectedSplashImage != null) {
             setContentView(R.layout.activity_splash9)
             val imageView = findViewById<ImageView>(R.id.splashImageView)
             val imageByteArray = android.util.Base64.decode(selectedSplashImage, android.util.Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
             imageView.setImageBitmap(bitmap)
+
+            // Apply the background color to the root layout
+            if (savedColor != null) {
+                val rootLayout = findViewById<RelativeLayout>(R.id.relativeLayout)
+                rootLayout.setBackgroundColor(Color.parseColor(savedColor))
+            }
         } else {
             when (selectedTheme) {
                 "theme2" -> setContentView(R.layout.activity_splash2)

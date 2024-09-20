@@ -1,4 +1,7 @@
 package com.saba.notebook
+import android.annotation.SuppressLint
+import android.graphics.Color
+import android.widget.RelativeLayout
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -29,6 +32,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
     private lateinit var saveButton: Button
     private lateinit var attachButton: Button
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var relativeLayout: RelativeLayout
 
     private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
@@ -43,6 +47,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
             }
         }
     }
+    @SuppressLint("MissingInflatedId")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +76,13 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
         dbHelper = DatabaseHelper(this)
 
+        relativeLayout = findViewById(R.id.relativeLayout) // Root layout
+
+        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+        if (savedColor != null) {
+            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        }
         userId = intent.getIntExtra("USER_ID", -1)
 
         // Set default date to current date

@@ -71,5 +71,6 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("com.github.skydoves:colorpickerview:2.2.4")
 
 }
