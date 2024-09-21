@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -45,7 +46,9 @@ class ImagesActivity : AppCompatActivity() {
 
         // Load images from database
         val imageList = dbHelper.getAllImages()
-        recyclerView.layoutManager = GridLayoutManager(this, 2)
+        Log.d("ImagesActivity", "Number of images loaded: ${imageList.size}")
+
+        recyclerView.layoutManager = GridLayoutManager(this, 4) // تغییر به ۴ ستون
         recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
             // Handle image selection
             saveSelectedImageToPreferences(selectedImage, imageType)
@@ -60,9 +63,31 @@ class ImagesActivity : AppCompatActivity() {
 
     private fun addDrawableImagesToDatabase() {
         val drawableIds = listOf(
-            R.drawable.add_note1, R.drawable.add_note2,
-            R.drawable.add_note3, R.drawable.add_note4, R.drawable.add_note5
-        )
+            R.drawable.theme_eleven1, R.drawable.theme_eleven2,
+            R.drawable.theme_eleven3, R.drawable.theme_eleven4,
+            R.drawable.theme_eleven5, R.drawable.theme_eleven6,
+            R.drawable.theme_eleven7, R.drawable.theme_eleven8,
+            R.drawable.theme_eleven9, R.drawable.theme_twelve1,
+            R.drawable.theme_twelve2, R.drawable.theme_twelve3,
+            R.drawable.theme_twelve4, R.drawable.theme_twelve5,
+            R.drawable.theme_twelve6, R.drawable.theme_twelve7,
+            R.drawable.theme_twelve8, R.drawable.theme_twelve9,
+            R.drawable.theme_thirteen1, R.drawable.theme_thirteen2,
+            R.drawable.theme_thirteen3, R.drawable.theme_thirteen4,
+            R.drawable.theme_thirteen5, R.drawable.theme_thirteen6,
+            R.drawable.theme_thirteen7, R.drawable.theme_thirteen8,
+            R.drawable.theme_thirteen9, R.drawable.theme_fourteen1,
+            R.drawable.theme_fourteen2, R.drawable.theme_fourteen3,
+            R.drawable.theme_fourteen4, R.drawable.theme_fourteen5,
+            R.drawable.theme_fourteen6, R.drawable.theme_fourteen7,
+            R.drawable.theme_fourteen8, R.drawable.theme_fourteen9,
+            R.drawable.theme_fifteen1, R.drawable.theme_fifteen2,
+            R.drawable.theme_fifteen3, R.drawable.theme_fifteen4,
+            R.drawable.theme_fifteen5, R.drawable.theme_fifteen6,
+            R.drawable.theme_fifteen7, R.drawable.theme_fifteen8,
+            R.drawable.theme_fifteen9,
+
+            )
         for (drawableId in drawableIds) {
             val bitmap = BitmapFactory.decodeResource(resources, drawableId)
             val stream = ByteArrayOutputStream()
@@ -83,7 +108,6 @@ class ImagesActivity : AppCompatActivity() {
             "LOGIN" -> prefsEditor.putString("SELECTED_LOGIN_IMAGE", base64Image)
             "HOME" -> prefsEditor.putString("SELECTED_HOME_IMAGE", base64Image)
             "ADD_NOTE" -> prefsEditor.putString("SELECTED_ADD_NOTE_IMAGE", base64Image)
-
             else -> prefsEditor.putString("SELECTED_SPLASH_IMAGE", base64Image)
         }
 
@@ -98,7 +122,6 @@ class ImagesActivity : AppCompatActivity() {
             "LOGIN" -> "Image successfully selected for login screen"
             "HOME" -> "Image successfully selected for home screen"
             "ADD_NOTE" -> "Image successfully selected for add note screen"
-
             else -> "Image successfully selected"
         }
         Toast.makeText(this, messageText, Toast.LENGTH_SHORT).show()

@@ -1,6 +1,7 @@
 package com.saba.notebook
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,21 +23,18 @@ class ImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val imageByteArray1 = imageList.getOrNull(position * 2)
+        val imageByteArray1 = imageList[position]
+        Log.d("ImageAdapter", "Binding image at position $position")
 
         holder.imageView1.setOnClickListener {
-            imageByteArray1?.let { onImageClick(it) }
+            onImageClick(imageByteArray1)
         }
 
-
-        imageByteArray1?.let {
-            val bitmap1 = BitmapFactory.decodeByteArray(it, 0, it.size)
-            holder.imageView1.setImageBitmap(bitmap1)
-        }
-
+        val bitmap1 = BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.size)
+        holder.imageView1.setImageBitmap(bitmap1)
     }
 
     override fun getItemCount(): Int {
-        return (imageList.size + 1) / 2
+        return imageList.size
     }
 }
