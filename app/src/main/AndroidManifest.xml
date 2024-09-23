@@ -92,7 +92,9 @@
         <activity android:name=".ThemeSelectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
-
+        <activity android:name=".ButtonImagesActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        </activity>
         <activity android:name=".ThemeCustomizationActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
