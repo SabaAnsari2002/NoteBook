@@ -14,7 +14,7 @@ class ImageAdapter(
 ) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
     class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView1: ImageView = view.findViewById(R.id.imageView1)
+        val imageView: ImageView = view.findViewById(R.id.imageView1)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
@@ -23,15 +23,22 @@ class ImageAdapter(
     }
 
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
-        val imageByteArray1 = imageList[position]
-        Log.d("ImageAdapter", "Binding image at position $position")
+        val imageByteArray = imageList[position]
 
-        holder.imageView1.setOnClickListener {
-            onImageClick(imageByteArray1)
+        // Decode byte array to bitmap
+        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+
+        // Ensure bitmap is not null
+        if (bitmap != null) {
+            holder.imageView.setImageBitmap(bitmap)
+        } else {
+            Log.e("ImageAdapter", "Error decoding image at position $position")
         }
 
-        val bitmap1 = BitmapFactory.decodeByteArray(imageByteArray1, 0, imageByteArray1.size)
-        holder.imageView1.setImageBitmap(bitmap1)
+        // Set click listener
+        holder.imageView.setOnClickListener {
+            onImageClick(imageByteArray)
+        }
     }
 
     override fun getItemCount(): Int {
