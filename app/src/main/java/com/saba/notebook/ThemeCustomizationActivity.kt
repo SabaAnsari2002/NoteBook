@@ -105,8 +105,8 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val addNotePageButton = findViewById<LinearLayout>(R.id.add_note)
-        addNotePageButton.setOnClickListener {
+        val addNoteButton = findViewById<LinearLayout>(R.id.add_note)
+        addNoteButton.setOnClickListener {
             // ذخیره اطلاعات شخصی‌سازی صفحه افزودن نوت در SharedPreferences
             sharedPreferences.edit().apply {
                 putBoolean("isAddNoteCustomized", true) // مشخص کردن اینکه صفحه افزودن نوت شخصی‌سازی شده
@@ -137,8 +137,8 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         }
 
-        val addNoteButton = findViewById<LinearLayout>(R.id.addNote)
-        addNoteButton.setOnClickListener {
+        val addNoteButtonIcon = findViewById<LinearLayout>(R.id.addNote)
+        addNoteButtonIcon.setOnClickListener {
             sharedPreferences.edit().apply {
                 putBoolean("isAddNoteCustomized", true)
                 apply()
