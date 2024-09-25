@@ -20,67 +20,85 @@ class MainActivityTheme9 : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main9)
 
-        // ابتدا sharedPreferences را مقداردهی کنید
+        initializeViews()
+        setupSharedPreferences()
+        applyBackgroundColor()
+        handleCustomization()
+        checkLoginStatus()
+        setupButtons()
+    }
+
+    private fun initializeViews() {
+        relativeLayout = findViewById(R.id.relativeLayout)
+    }
+
+    private fun setupSharedPreferences() {
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+    }
 
-        relativeLayout = findViewById(R.id.relativeLayout) // Root layout
-
-        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+    private fun applyBackgroundColor() {
         val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
-        if (savedColor != null) {
-            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        savedColor?.let {
+            relativeLayout.setBackgroundColor(Color.parseColor(it))
         }
+    }
 
-        // بررسی اینکه آیا تصویر برای تم شخصی‌سازی شده انتخاب شده است
+    private fun handleCustomization() {
         val isThemeCustomized = sharedPreferences.getBoolean("isTheme9Customized", false)
         val selectedMainImage = sharedPreferences.getString("SELECTED_MAIN_IMAGE", null)
-        val selectedRegisterImage = sharedPreferences.getString("SELECTED_REGISTER_IMAGE", null)
-        val selectedLoginImage = sharedPreferences.getString("SELECTED_LOGIN_IMAGE", null)
 
         if (isThemeCustomized && selectedMainImage != null) {
-            // اگر تم شخصی‌سازی شده و تصویر انتخاب شده باشد، تصویر را نمایش دهید
             val imageByteArray = android.util.Base64.decode(selectedMainImage, android.util.Base64.DEFAULT)
             val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-            val imageView = findViewById<ImageView>(R.id.mainImageView)
-            imageView.setImageBitmap(bitmap)
+            findViewById<ImageView>(R.id.mainImageView).setImageBitmap(bitmap)
         }
+    }
 
+    private fun checkLoginStatus() {
         if (sharedPreferences.getBoolean("isLoggedIn", false)) {
             val userId = sharedPreferences.getInt("userId", -1)
             if (userId != -1) {
-                val intent = Intent(this, HomeActivityTheme9::class.java)
-                intent.putExtra("USER_ID", userId)
-                startActivity(intent)
-                finish()
+                navigateToHome(userId)
             } else {
-                // اگر کاربر لاگین نکرده است، به صفحه لاگین بروید
                 startActivity(Intent(this, LoginActivityTheme9::class.java))
-                finish()
             }
-            return
+            finish()
         }
+    }
 
-        // تنظیم دکمه‌های ثبت‌نام و ورود
+    private fun navigateToHome(userId: Int) {
+        val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
+        val intent = if (isHomeCustomized) {
+            Intent(this, HomeActivityTheme9::class.java)
+        } else {
+            Intent(this, HomeActivityTheme10::class.java)
+        }
+        intent.putExtra("USER_ID", userId)
+        startActivity(intent)
+    }
+
+    private fun setupButtons() {
         val btnSignIn = findViewById<Button>(R.id.btnRegister)
         val btnLogin = findViewById<Button>(R.id.btnLogin)
 
         btnSignIn.setOnClickListener {
-            // بررسی انتخاب تصویر برای رجیستر
-            if (selectedRegisterImage != null) {
-                // اگر تصویری برای رجیستر انتخاب شده، به RegisterActivityTheme9 بروید
-                startActivity(Intent(this, RegisterActivityTheme9::class.java))
+            val selectedRegisterImage = sharedPreferences.getString("SELECTED_REGISTER_IMAGE", null)
+            val intent = if (selectedRegisterImage != null) {
+                Intent(this, RegisterActivityTheme9::class.java)
             } else {
-                // در غیر این صورت، به RegisterActivityTheme10 بروید
-                startActivity(Intent(this, RegisterActivityTheme10::class.java))
+                Intent(this, RegisterActivityTheme10::class.java)
             }
+            startActivity(intent)
         }
 
         btnLogin.setOnClickListener {
-            if (selectedLoginImage != null) {
-                startActivity(Intent(this, LoginActivityTheme9::class.java))
+            val selectedLoginImage = sharedPreferences.getString("SELECTED_LOGIN_IMAGE", null)
+            val intent = if (selectedLoginImage != null) {
+                Intent(this, LoginActivityTheme9::class.java)
             } else {
-                startActivity(Intent(this, LoginActivityTheme10::class.java))
+                Intent(this, LoginActivityTheme10::class.java)
             }
+            startActivity(intent)
         }
     }
 }

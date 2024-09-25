@@ -124,57 +124,57 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         backgroundColorButton.setOnClickListener {
             showColorPickerDialog()
         }
-//        val logoutButton = findViewById<LinearLayout>(R.id.logout)
-//        logoutButton.setOnClickListener {
-//            sharedPreferences.edit().apply {
-//                putBoolean("isLogoutCustomized", true)
-//                apply()
-//            }
-//            val intent = Intent(this, ButtonImagesActivity::class.java)
-//            intent.putExtra("USER_ID", userId)
-//            intent.putExtra("BUTTON_TYPE", "LOGOUT")
-//            startActivity(intent)
-//
-//        }
-//
-//        val addNoteButton = findViewById<LinearLayout>(R.id.addNote)
-//        addNoteButton.setOnClickListener {
-//            sharedPreferences.edit().apply {
-//                putBoolean("isAddNoteCustomized", true)
-//                apply()
-//            }
-//            val intent = Intent(this, ButtonImagesActivity::class.java)
-//            intent.putExtra("USER_ID", userId)
-//            intent.putExtra("BUTTON_TYPE", "ADD_NOTE")
-//            startActivity(intent)
-//
-//        }
-//
-//        val attachButton = findViewById<LinearLayout>(R.id.attach)
-//        attachButton.setOnClickListener {
-//            // Save attach button customization
-//            sharedPreferences.edit().apply {
-//                putBoolean("isAttachCustomized", true)
-//                apply()
-//            }
-//            val intent = Intent(this, ButtonImagesActivity::class.java)
-//            intent.putExtra("USER_ID", userId)
-//            intent.putExtra("BUTTON_TYPE", "ATTACH")
-//            startActivity(intent)
-//        }
-//
-//        val deleteButton = findViewById<LinearLayout>(R.id.delete)
-//        deleteButton.setOnClickListener {
-//            // Save delete button customization
-//            sharedPreferences.edit().apply {
-//                putBoolean("isDeleteCustomized", true)
-//                apply()
-//            }
-//            val intent = Intent(this, ButtonImagesActivity::class.java)
-//            intent.putExtra("USER_ID", userId)
-//            intent.putExtra("BUTTON_TYPE", "DELETE")
-//            startActivity(intent)
-//        }
+        val logoutButton = findViewById<LinearLayout>(R.id.logout)
+        logoutButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isLogoutCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "LOGOUT")
+            startActivity(intent)
+
+        }
+
+        val addNoteButtonIcon = findViewById<LinearLayout>(R.id.addNote)
+        addNoteButtonIcon.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isAddNoteCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "ADD_NOTE")
+            startActivity(intent)
+
+        }
+
+        val attachButton = findViewById<LinearLayout>(R.id.attach)
+        attachButton.setOnClickListener {
+            // Save attach button customization
+            sharedPreferences.edit().apply {
+                putBoolean("isAttachCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "ATTACH")
+            startActivity(intent)
+        }
+
+        val deleteButton = findViewById<LinearLayout>(R.id.delete)
+        deleteButton.setOnClickListener {
+            // Save delete button customization
+            sharedPreferences.edit().apply {
+                putBoolean("isDeleteCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "DELETE")
+            startActivity(intent)
+        }
 
     }
 
