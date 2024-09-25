@@ -47,20 +47,20 @@
             android:focusable="false"
             android:background="@null" />
             <Button
-                android:id="@+id/atach_button"
+                android:id="@+id/attach_button"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="70dp"
-                android:background="@drawable/attach_icon6" />
+                android:background="@drawable/attach35" />
             <Button
                 android:id="@+id/save_button"
                 android:layout_width="46dp"
                 android:layout_height="36dp"
-                android:background="@drawable/save_button_add_note6"
+                android:background="@drawable/save_button_add_note9"
                 android:textSize="16dp"
-                android:textColor="#DCFFF1DC"
+                android:textColor="#FFFFFF"
                 android:fontFamily="@font/concertone"
                 android:text="Save"
                 android:layout_alignParentTop="true"
