@@ -35,7 +35,7 @@
                 android:layout_height="45dp"
                 android:layout_marginTop="2dp"
                 android:layout_alignParentStart="true"
-                android:background="@drawable/log_out_icon6" />
+                android:background="@drawable/logout35" />
 
             <Button
                 android:id="@+id/theme_button"
@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:text="NoteBook"
             android:textSize="46sp"
-            android:textColor="#3D9C91"
+            android:textColor="#000000"
             android:layout_gravity="center_horizontal"
             android:fontFamily="@font/nerkoone"
             android:layout_alignParentStart="true"
@@ -64,7 +64,7 @@
             android:layout_height="2dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
-            android:background="#3D9C91"
+            android:background="#000000"
             android:layout_marginTop="4dp"/>
 
         <RelativeLayout
@@ -79,7 +79,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="0dp"
-                android:background="@drawable/add_note_icon6" />
+                android:background="@drawable/addpost35" />
             <Button
                 android:id="@+id/delete_button"
                 android:layout_width="40dp"
@@ -88,7 +88,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginEnd="0dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/delete_icon6" />
+                android:background="@drawable/bin35" />
         </RelativeLayout>
 
         <Space

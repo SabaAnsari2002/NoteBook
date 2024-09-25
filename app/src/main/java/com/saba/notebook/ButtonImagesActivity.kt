@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.util.Base64
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -133,22 +134,39 @@ class ButtonImagesActivity : AppCompatActivity() {
             outputStream.toByteArray()  // Return byte array
         }
     }
-
-    private fun saveSelectedImageToPreferences(imageByteArray: ByteArray, buttonType: String) {
-        // Convert ByteArray to Base64 string
-        val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
-
-        // Save the Base64 string in SharedPreferences
+    private fun saveSelectedImageToPreferences(selectedImage: ByteArray, buttonType: String) {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val prefsEditor = sharedPreferences.edit()
+        val editor = sharedPreferences.edit()
 
+        // تبدیل بایت‌ها به رشته Base64
+        val encodedImage = Base64.encodeToString(selectedImage, Base64.DEFAULT)
+
+        // ذخیره تصویر در SharedPreferences بر اساس نوع دکمه
         when (buttonType) {
-            "ADD_NOTE" -> prefsEditor.putString("SELECTED_ADD_NOTE_IMAGE", base64Image)
-            "LOGOUT" -> prefsEditor.putString("SELECTED_LOGOUT_IMAGE", base64Image)
-            "ATTACH" -> prefsEditor.putString("SELECTED_ATTACH_IMAGE", base64Image)
-            "DELETE" -> prefsEditor.putString("SELECTED_DELETE_IMAGE", base64Image)
+            "LOGOUT" -> editor.putString("LOGOUT_BUTTON_IMAGE", encodedImage)
+            "ADD_NOTE" -> editor.putString("ADD_NOTE_BUTTON_IMAGE", encodedImage)
+            "ATTACH" -> editor.putString("ATTACH_BUTTON_IMAGE", encodedImage)
+            "DELETE" -> editor.putString("DELETE_BUTTON_IMAGE", encodedImage)
         }
 
-        prefsEditor.apply()
+        editor.apply()
     }
+
+//    private fun saveSelectedImageToPreferences(imageByteArray: ByteArray, buttonType: String) {
+//        // Convert ByteArray to Base64 string
+//        val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
+//
+//        // Save the Base64 string in SharedPreferences
+//        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+//        val prefsEditor = sharedPreferences.edit()
+//
+//        when (buttonType) {
+//            "ADD_NOTE" -> prefsEditor.putString("SELECTED_ADD_NOTE_IMAGE", base64Image)
+//            "LOGOUT" -> prefsEditor.putString("SELECTED_LOGOUT_IMAGE", base64Image)
+//            "ATTACH" -> prefsEditor.putString("SELECTED_ATTACH_IMAGE", base64Image)
+//            "DELETE" -> prefsEditor.putString("SELECTED_DELETE_IMAGE", base64Image)
+//        }
+//
+//        prefsEditor.apply()
+//    }
 }

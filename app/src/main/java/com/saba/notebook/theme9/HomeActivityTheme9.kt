@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import android.widget.RelativeLayout
 
 class HomeActivityTheme9 : AppCompatActivity() {
@@ -72,10 +73,52 @@ class HomeActivityTheme9 : AppCompatActivity() {
 
         // Load and set the background image
         loadBackgroundImage()
-
+        loadLogoutButtonImage()
+        loadDeleteButtonImage()
+        loadAddNoteButtonImage()
         setupListeners()
         setupButtons()
         setupTouchListener()
+    }
+
+    private fun loadLogoutButtonImage() {
+        // بازیابی رشته Base64 از SharedPreferences
+        val encodedImage = sharedPreferences.getString("LOGOUT_BUTTON_IMAGE", null)
+        if (encodedImage != null) {
+            // تبدیل رشته Base64 به بایت
+            val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+            // تبدیل بایت به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            // تنظیم Bitmap به دکمه لاگ اوت
+            val logoutButton = findViewById<Button>(R.id.logout_button)
+            logoutButton.background = BitmapDrawable(resources, bitmap)
+        }
+    }
+    private fun loadDeleteButtonImage() {
+        // بازیابی رشته Base64 از SharedPreferences
+        val encodedImage = sharedPreferences.getString("DELETE_BUTTON_IMAGE", null)
+        if (encodedImage != null) {
+            // تبدیل رشته Base64 به بایت
+            val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+            // تبدیل بایت به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            // تنظیم Bitmap به دکمه لاگ اوت
+            val deleteButton = findViewById<Button>(R.id.delete_button)
+            deleteButton.background = BitmapDrawable(resources, bitmap)
+        }
+    }
+    private fun loadAddNoteButtonImage() {
+        // بازیابی رشته Base64 از SharedPreferences
+        val encodedImage = sharedPreferences.getString("ADD_NOTE_BUTTON_IMAGE", null)
+        if (encodedImage != null) {
+            // تبدیل رشته Base64 به بایت
+            val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+            // تبدیل بایت به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            // تنظیم Bitmap به دکمه لاگ اوت
+            val addNoteButton = findViewById<Button>(R.id.add_note_button)
+            addNoteButton.background = BitmapDrawable(resources, bitmap)
+        }
     }
 
     private fun loadBackgroundImage() {

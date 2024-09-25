@@ -7,6 +7,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
@@ -15,6 +16,7 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
+import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -25,6 +27,7 @@ import java.io.ByteArrayOutputStream
 import java.util.*
 
 class AddNoteActivityTheme9 : ComponentActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var titleEditText: EditText
     private lateinit var dateEditText: EditText
@@ -52,12 +55,13 @@ class AddNoteActivityTheme9 : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_note9)
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
         titleEditText = findViewById(R.id.note_title)
         dateEditText = findViewById(R.id.note_date)
         messageEditText = findViewById(R.id.note_message)
         saveButton = findViewById(R.id.save_button)
-        attachButton = findViewById(R.id.atach_button)
+        attachButton = findViewById(R.id.attach_button)
         val addNoteImageView = findViewById<ImageView>(R.id.add_note_image)
 
 // بازیابی تصویر انتخابی از SharedPreferences
@@ -138,8 +142,21 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         attachButton.setOnClickListener {
             getContent.launch("image/*")
         }
+        loadAttachButtonImage()
     }
-
+    private fun loadAttachButtonImage() {
+        // بازیابی رشته Base64 از SharedPreferences
+        val encodedImage = sharedPreferences.getString("ATTACH_BUTTON_IMAGE", null)
+        if (encodedImage != null) {
+            // تبدیل رشته Base64 به بایت
+            val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+            // تبدیل بایت به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            // تنظیم Bitmap به دکمه لاگ اوت
+            val attachButton = findViewById<Button>(R.id.attach_button)
+            attachButton.background = BitmapDrawable(resources, bitmap)
+        }
+    }
     private fun insertImageIntoMessage(imageUri: Uri) {
         val bitmap = getBitmapFromUri(imageUri)
         bitmap?.let {
