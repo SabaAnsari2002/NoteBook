@@ -422,7 +422,44 @@
 
         </LinearLayout>
 
+        <!-- save button-->
+        <LinearLayout
+            android:id="@+id/save_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="3"
+            android:layout_column="2"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/save_button"
+                    android:contentDescription="save_button" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="For save button"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
     </GridLayout>
+
     </ScrollView>
 
 </RelativeLayout>

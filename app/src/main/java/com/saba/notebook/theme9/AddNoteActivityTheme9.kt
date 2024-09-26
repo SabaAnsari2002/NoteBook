@@ -23,6 +23,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.DrawableCompat
 import java.io.ByteArrayOutputStream
 import java.util.*
 
@@ -87,6 +88,16 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         if (savedColor != null) {
             relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
         }
+
+        val savedButtonColor = sharedPreferences.getString("SAVE_BUTTON_COLOR", null)
+
+        if (savedButtonColor != null) {
+            val drawable = saveButton.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(savedButtonColor))
+            saveButton.background = wrappedDrawable
+        }
+
         userId = intent.getIntExtra("USER_ID", -1)
 
         // Set default date to current date
@@ -144,6 +155,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
         loadAttachButtonImage()
     }
+
     private fun loadAttachButtonImage() {
         // بازیابی رشته Base64 از SharedPreferences
         val encodedImage = sharedPreferences.getString("ATTACH_BUTTON_IMAGE", null)
