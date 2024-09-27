@@ -124,6 +124,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         backgroundColorButton.setOnClickListener {
             showColorPickerDialog()
         }
+
         val logoutButton = findViewById<LinearLayout>(R.id.logout)
         logoutButton.setOnClickListener {
             sharedPreferences.edit().apply {
@@ -176,6 +177,32 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val saveButtonColorButton = findViewById<LinearLayout>(R.id.save_button)
+        saveButtonColorButton.setOnClickListener {
+            showColorPickerDialogSaveButton()
+        }
+
+    }
+
+    private fun showColorPickerDialogSaveButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ذخیره")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveSaveButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveSaveButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("SAVE_BUTTON_COLOR", hexColor)
+            apply()
+        }
     }
 
     private fun showColorPickerDialog() {
@@ -192,13 +219,13 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             .setBottomSpace(12)
             .show()
     }
-
     private fun saveBackgroundColor(hexColor: String) {
         sharedPreferences.edit().apply {
             putString("BACKGROUND_COLOR", hexColor)
             apply()
         }
     }
+
 
     private fun showColorSelectedMessage(hexColor: String) {
         Toast.makeText(this, "رنگ $hexColor انتخاب شد", Toast.LENGTH_SHORT).show()
