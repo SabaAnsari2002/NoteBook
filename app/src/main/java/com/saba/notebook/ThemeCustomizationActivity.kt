@@ -1,5 +1,6 @@
 package com.saba.notebook
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,6 +16,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Int = -1
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_theme_customization)
@@ -181,7 +183,55 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         saveButtonColorButton.setOnClickListener {
             showColorPickerDialogSaveButton()
         }
+        val registerColorButton = findViewById<LinearLayout>(R.id.register_button)
+        registerColorButton.setOnClickListener {
+            showColorPickerDialogRegisterButton()
+        }
+        val loginColorButton = findViewById<LinearLayout>(R.id.login_button)
+        loginColorButton.setOnClickListener {
+            showColorPickerDialogLoginButton()
+        }
 
+    }
+    private fun showColorPickerDialogRegisterButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ثبت نام")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveRegisterButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveRegisterButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("REGISTER_BUTTON_COLOR", hexColor)
+            apply()
+        }
+    }
+    private fun showColorPickerDialogLoginButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ورود")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveLoginButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveLoginButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("LOGIN_BUTTON_COLOR", hexColor)
+            apply()
+        }
     }
 
     private fun showColorPickerDialogSaveButton() {

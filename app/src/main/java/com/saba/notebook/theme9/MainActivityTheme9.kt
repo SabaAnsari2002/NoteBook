@@ -10,16 +10,38 @@ import androidx.activity.ComponentActivity
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.widget.RelativeLayout
+import androidx.core.graphics.drawable.DrawableCompat
 
 class MainActivityTheme9 : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var relativeLayout: RelativeLayout
+    private lateinit var registerButton: Button
+    private lateinit var loginButton: Button
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main9)
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
+        registerButton = findViewById(R.id.btnRegister)
+        loginButton = findViewById(R.id.btnLogin)
+
+        val registerButtonColor = sharedPreferences.getString("REGISTER_BUTTON_COLOR", null)
+        val loginButtonColor = sharedPreferences.getString("LOGIN_BUTTON_COLOR", null)
+
+        if (registerButtonColor != null) {
+            val drawable = registerButton.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(registerButtonColor))
+            registerButton.background = wrappedDrawable
+        }
+        if (loginButtonColor != null) {
+            val drawable = loginButton.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(loginButtonColor))
+            loginButton.background = wrappedDrawable
+        }
         initializeViews()
         setupSharedPreferences()
         applyBackgroundColor()

@@ -26,7 +26,7 @@
         android:layout_below="@id/theme_selection_text"
         android:layout_marginTop="30dp"
         android:columnCount="3"
-        android:rowCount="4"
+        android:rowCount="5"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         >
@@ -458,6 +458,77 @@
 
         </LinearLayout>
 
+        <!-- register button-->
+        <LinearLayout
+            android:id="@+id/register_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="4"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/register_button"
+                    android:contentDescription="register_button" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="For register button"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+        <!-- login button-->
+        <LinearLayout
+            android:id="@+id/login_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="4"
+            android:layout_column="1"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/login_button"
+                    android:contentDescription="login_button" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="For login button"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+        </LinearLayout>
     </GridLayout>
 
     </ScrollView>
