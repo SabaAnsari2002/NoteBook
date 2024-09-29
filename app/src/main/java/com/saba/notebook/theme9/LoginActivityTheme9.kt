@@ -13,13 +13,17 @@ import androidx.activity.ComponentActivity
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.widget.RelativeLayout
+import androidx.core.graphics.drawable.DrawableCompat
 
 class LoginActivityTheme9 : ComponentActivity() {
 
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var relativeLayout: RelativeLayout
-    @SuppressLint("MissingInflatedId")
+    private lateinit var loginButton: Button
+    private lateinit var editTextUsername: EditText
+    private lateinit var editTextPassword: EditText
+    @SuppressLint("MissingInflatedId", "CutPasteId")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +38,35 @@ class LoginActivityTheme9 : ComponentActivity() {
         if (savedColor != null) {
             relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
         }
+        loginButton = findViewById(R.id.btnLogin)
+        val loginButtonColor = sharedPreferences.getString("LOGIN_BUTTON_COLOR", null)
+        if (loginButtonColor != null) {
+            val drawable = loginButton.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(loginButtonColor))
+            loginButton.background = wrappedDrawable
+        }
+
+        editTextUsername = findViewById(R.id.etUsername)
+
+        val editTextUsernameColor = sharedPreferences.getString("EDIT_TEXT_BUTTON_COLOR", null)
+        if (editTextUsernameColor != null) {
+            val drawable = editTextUsername.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(editTextUsernameColor))
+            editTextUsername.background = wrappedDrawable
+        }
+
+        editTextPassword = findViewById(R.id.etPassword)
+
+        val editTextPasswordColor = sharedPreferences.getString("EDIT_TEXT_BUTTON_COLOR", null)
+        if (editTextPasswordColor != null) {
+            val drawable = editTextPassword.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(editTextPasswordColor))
+            editTextPassword.background = wrappedDrawable
+        }
+
         val etUsername = findViewById<EditText>(R.id.etUsername)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnLogin = findViewById<Button>(R.id.btnLogin)

@@ -191,7 +191,31 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         loginColorButton.setOnClickListener {
             showColorPickerDialogLoginButton()
         }
+        val editTextButton = findViewById<LinearLayout>(R.id.edit_text_button)
+        editTextButton.setOnClickListener {
+            showColorPickerDialogEditTextButton()
+        }
 
+    }
+    private fun showColorPickerDialogEditTextButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveEditTextButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveEditTextButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("EDIT_TEXT_BUTTON_COLOR", hexColor)
+            apply()
+        }
     }
     private fun showColorPickerDialogRegisterButton() {
         ColorPickerDialog.Builder(this)

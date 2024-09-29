@@ -54,7 +54,7 @@
         android:layout_width="300dp"
         android:layout_height="60dp"
         android:layout_marginTop="10dp"
-        android:backgroundTint="#00BCD4"
+        android:backgroundTint="#808080"
         android:text="Login"
         android:background="@drawable/login_button9"
         android:layout_gravity="center_horizontal"
