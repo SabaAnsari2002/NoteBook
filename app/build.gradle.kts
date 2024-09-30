@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt") // Add this line to enable kapt for Kotlin
 }
 
 android {
@@ -73,4 +74,9 @@ dependencies {
     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation ("com.github.skydoves:colorpickerview:2.2.4")
 
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
+    // Glide dependencies with kapt for Kotlin
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    kapt ("com.github.bumptech.glide:compiler:4.12.0")
 }

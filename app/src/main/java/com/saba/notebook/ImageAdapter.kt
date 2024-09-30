@@ -1,12 +1,13 @@
 package com.saba.notebook
 
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.saba.notebook.R
 
 class ImageAdapter(
     private val imageList: List<ByteArray>,
@@ -25,15 +26,13 @@ class ImageAdapter(
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageByteArray = imageList[position]
 
-        // Decode byte array to bitmap
-        val bitmap = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
-
-        // Ensure bitmap is not null
-        if (bitmap != null) {
-            holder.imageView.setImageBitmap(bitmap)
-        } else {
-            Log.e("ImageAdapter", "Error decoding image at position $position")
-        }
+        // Load image using Glide
+        Glide.with(holder.itemView.context)
+            .asBitmap()  // Load image as Bitmap
+            .load(imageByteArray)  // Load image from byte array
+            .placeholder(R.drawable.placeholder_image)  // Placeholder while loading
+            .error(R.drawable.placeholder_image)  // Error placeholder in case of failure
+            .into(holder.imageView)
 
         // Set click listener
         holder.imageView.setOnClickListener {
