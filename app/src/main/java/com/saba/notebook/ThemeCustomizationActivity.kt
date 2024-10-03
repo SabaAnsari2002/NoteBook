@@ -5,14 +5,17 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-import android.widget.Toast
+import kotlinx.coroutines.*
 
 class ThemeCustomizationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Int = -1
+    private val ioScope = CoroutineScope(Dispatchers.IO) // برای اجرای عملیات در رشته پس‌زمینه
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,12 +24,14 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
-        userId = intent.getIntExtra("USER_ID", sharedPreferences.getInt("userId", -1))
-
-        if (userId == -1) {
-            startActivity(Intent(this, LoginActivityTheme1::class.java))
-            finish()
-            return
+        ioScope.launch {
+            userId = getUserIdFromIntentOrPrefs()
+            if (userId == -1) {
+                withContext(Dispatchers.Main) {
+                    startActivity(Intent(this@ThemeCustomizationActivity, LoginActivityTheme1::class.java))
+                    finish()
+                }
+            }
         }
 
         findViewById<LinearLayout>(R.id.splash_screen).setOnClickListener {
@@ -90,23 +95,40 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleCustomization(imageType: String, imageData: String? = null) {
-        sharedPreferences.edit().apply {
-            putBoolean("isTheme9Customized", true)
-            imageData?.let {
-                putString("SELECTED_${imageType}_IMAGE", it)
-            }
-            apply()
+    private suspend fun getUserIdFromIntentOrPrefs(): Int {
+        return withContext(Dispatchers.IO) {
+            intent.getIntExtra("USER_ID", sharedPreferences.getInt("userId", -1))
         }
-        startImagesActivity(imageType)
+    }
+
+
+    private fun handleCustomization(imageType: String, imageData: String? = null) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Save data in the background
+            sharedPreferences.edit().apply {
+                putBoolean("isTheme9Customized", true)
+                imageData?.let {
+                    putString("SELECTED_${imageType}_IMAGE", it)
+                }
+                apply()
+            }
+            withContext(Dispatchers.Main) {
+                // Back to the main thread to update the UI or start activity
+                startImagesActivity(imageType)
+            }
+        }
     }
 
     private fun handleButtonCustomization(buttonType: String) {
-        sharedPreferences.edit().apply {
-            putBoolean("is${buttonType}Customized", true)
-            apply()
+        ioScope.launch {
+            sharedPreferences.edit().apply {
+                putBoolean("is${buttonType}Customized", true)
+                apply()
+            }
+            withContext(Dispatchers.Main) {
+                startButtonImagesActivity(buttonType)
+            }
         }
-        startButtonImagesActivity(buttonType)
     }
 
     private fun startImagesActivity(imageType: String) {
@@ -128,8 +150,12 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             .setTitle(title)
             .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
                 val hexColor = "#" + envelope.hexCode
-                saveColor(preferenceKey, hexColor)
-                showColorSelectedMessage(hexColor)
+                ioScope.launch {
+                    saveColor(preferenceKey, hexColor)
+                    withContext(Dispatchers.Main) {
+                        showColorSelectedMessage(hexColor)
+                    }
+                }
             })
             .setNegativeButton("لغو") { dialogInterface, _ -> dialogInterface.dismiss() }
             .attachAlphaSlideBar(true)
@@ -138,10 +164,12 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun saveColor(preferenceKey: String, hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString(preferenceKey, hexColor)
-            apply()
+    private suspend fun saveColor(preferenceKey: String, hexColor: String) {
+        withContext(Dispatchers.IO) {
+            sharedPreferences.edit().apply {
+                putString(preferenceKey, hexColor)
+                apply()
+            }
         }
     }
 
@@ -151,15 +179,19 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
-        val intent = if (isHomeCustomized) {
-            Intent(this, HomeActivityTheme9::class.java)
-        } else {
-            Intent(this, HomeActivityTheme10::class.java)
+        ioScope.launch {
+            val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
+            withContext(Dispatchers.Main) {
+                val intent = if (isHomeCustomized) {
+                    Intent(this@ThemeCustomizationActivity, HomeActivityTheme9::class.java)
+                } else {
+                    Intent(this@ThemeCustomizationActivity, HomeActivityTheme10::class.java)
+                }
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                intent.putExtra("USER_ID", userId)
+                startActivity(intent)
+                finish()
+            }
         }
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("USER_ID", userId)
-        startActivity(intent)
-        finish()
     }
 }
