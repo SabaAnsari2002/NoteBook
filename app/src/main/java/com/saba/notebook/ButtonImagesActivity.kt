@@ -152,21 +152,4 @@ class ButtonImagesActivity : AppCompatActivity() {
         editor.apply()
     }
 
-//    private fun saveSelectedImageToPreferences(imageByteArray: ByteArray, buttonType: String) {
-//        // Convert ByteArray to Base64 string
-//        val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
-//
-//        // Save the Base64 string in SharedPreferences
-//        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-//        val prefsEditor = sharedPreferences.edit()
-//
-//        when (buttonType) {
-//            "ADD_NOTE" -> prefsEditor.putString("SELECTED_ADD_NOTE_IMAGE", base64Image)
-//            "LOGOUT" -> prefsEditor.putString("SELECTED_LOGOUT_IMAGE", base64Image)
-//            "ATTACH" -> prefsEditor.putString("SELECTED_ATTACH_IMAGE", base64Image)
-//            "DELETE" -> prefsEditor.putString("SELECTED_DELETE_IMAGE", base64Image)
-//        }
-//
-//        prefsEditor.apply()
-//    }
 }
