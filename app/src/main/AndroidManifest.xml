@@ -99,6 +99,7 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
         <activity android:name=".ImagesActivity"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>
 

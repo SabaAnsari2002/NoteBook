@@ -77,6 +77,7 @@ dependencies {
     implementation ("com.squareup.picasso:picasso:2.71828")
 
     // Glide dependencies with kapt for Kotlin
-    implementation ("com.github.bumptech.glide:glide:4.12.0")
-    kapt ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    kapt ("com.github.bumptech.glide:compiler:4.16.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
 }
