@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/theme_selection_text"
-        android:layout_marginTop="30dp">
+        android:layout_marginBottom="10dp">
     <GridLayout
         android:id="@+id/theme_grid"
         android:layout_width="match_parent"
@@ -29,6 +29,7 @@
         android:rowCount="5"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
+        android:paddingBottom="30dp"
         >
 
         <!-- splash screen-->
