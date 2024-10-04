@@ -1,9 +1,11 @@
 package com.saba.notebook
 
 import android.annotation.SuppressLint
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.os.Handler
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -35,26 +37,38 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
 
         findViewById<LinearLayout>(R.id.splash_screen).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("SPLASH")
         }
 
         findViewById<LinearLayout>(R.id.main).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("MAIN", "your_image_data_here") // Replace with actual image data
         }
 
         findViewById<LinearLayout>(R.id.register).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("REGISTER", "your_register_image_data_here")
         }
 
         findViewById<LinearLayout>(R.id.login).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("LOGIN", "your_login_image_data_here")
         }
 
         findViewById<LinearLayout>(R.id.home).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("HOME")
         }
 
         findViewById<LinearLayout>(R.id.add_note).setOnClickListener {
+            showLoadingDialog()
+
             handleCustomization("ADD_NOTE")
         }
 
@@ -93,6 +107,18 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.edit_text_button).setOnClickListener {
             showColorPickerDialog("انتخاب رنگ دکمه یوزر و پسورد", "EDIT_TEXT_BUTTON_COLOR")
         }
+    }
+    private fun showLoadingDialog() {
+        val loadingDialog = ProgressDialog(this)
+        loadingDialog.setMessage("Loading, please wait...")
+        loadingDialog.setCancelable(false)
+        loadingDialog.show()
+
+        // Simulate delay for loading (you can replace this with actual loading process)
+        Handler().postDelayed({
+            loadingDialog.dismiss()
+            // Navigate to the activity once loading is done
+        }, 5000) // 2-second delay, replace with real data loading time
     }
 
     private suspend fun getUserIdFromIntentOrPrefs(): Int {
