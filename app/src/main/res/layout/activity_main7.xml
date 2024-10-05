@@ -1,0 +1,49 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="#E1FFF5E7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imgCorner"
+            android:layout_width="320dp"
+            android:layout_height="320dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/main_icon7" />
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="40dp"
+            android:backgroundTint="#E1A18D"
+            android:text="Register"
+            android:background="@drawable/corner_button"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/dmseriftext"
+            android:textSize="30sp"
+            android:textColor="#000" />
+        <Button
+            android:id="@+id/btnLogin"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:backgroundTint="#E1A18D"
+            android:text="Login"
+            android:background="@drawable/corner_button"
+            android:layout_gravity="center_horizontal"
+            android:fontFamily="@font/dmseriftext"
+            android:textSize="30sp"
+            android:textColor="#000" />
+
+    </LinearLayout>
+
+</RelativeLayout>
