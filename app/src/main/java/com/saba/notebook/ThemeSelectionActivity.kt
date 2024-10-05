@@ -58,7 +58,12 @@ class ThemeSelectionActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.theme6).setOnClickListener {
             applyTheme("theme6")
         }
-
+        findViewById<LinearLayout>(R.id.theme7).setOnClickListener {
+            applyTheme("theme7")
+        }
+        findViewById<LinearLayout>(R.id.theme8).setOnClickListener {
+            applyTheme("theme8")
+        }
         findViewById<LinearLayout>(R.id.theme9).setOnClickListener {
             // Apply theme 10 when theme 9 is selected
             sharedPreferences.edit().putString("SELECTED_THEME", "theme10").apply()
@@ -81,6 +86,8 @@ class ThemeSelectionActivity : AppCompatActivity() {
             "theme4" -> Intent(this, HomeActivityTheme4::class.java)
             "theme5" -> Intent(this, HomeActivityTheme5::class.java)
             "theme6" -> Intent(this, HomeActivityTheme6::class.java)
+            "theme7" -> Intent(this, HomeActivityTheme7::class.java)
+            "theme8" -> Intent(this, HomeActivityTheme8::class.java)
             "theme9", "theme10" -> Intent(this, HomeActivityTheme10::class.java)
             else -> Intent(this, HomeActivityTheme1::class.java)
         }
