@@ -46,6 +46,8 @@ class SplashActivity : AppCompatActivity() {
                 "theme4" -> setContentView(R.layout.activity_splash4)
                 "theme5" -> setContentView(R.layout.activity_splash5)
                 "theme6" -> setContentView(R.layout.activity_splash6)
+                "theme7" -> setContentView(R.layout.activity_splash7)
+                "theme8" -> setContentView(R.layout.activity_splash8)
                 "theme10" -> setContentView(R.layout.activity_splash10)
                 else -> setContentView(R.layout.activity_splash1)
             }
@@ -58,6 +60,8 @@ class SplashActivity : AppCompatActivity() {
                 "theme4" -> Intent(this, MainActivityTheme4::class.java)
                 "theme5" -> Intent(this, MainActivityTheme5::class.java)
                 "theme6" -> Intent(this, MainActivityTheme6::class.java)
+                "theme7" -> Intent(this, MainActivityTheme7::class.java)
+                "theme8" -> Intent(this, MainActivityTheme8::class.java)
                 "theme9" -> Intent(this, MainActivityTheme9::class.java)
                 "theme10" -> Intent(this, MainActivityTheme10::class.java)
                 else -> Intent(this, MainActivityTheme1::class.java)
