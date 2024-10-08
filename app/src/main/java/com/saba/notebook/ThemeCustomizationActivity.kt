@@ -107,6 +107,10 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.edit_text_button).setOnClickListener {
             showColorPickerDialog("انتخاب رنگ دکمه یوزر و پسورد", "EDIT_TEXT_BUTTON_COLOR")
         }
+        findViewById<LinearLayout>(R.id.text_color).setOnClickListener {
+            showColorPickerDialog("انتخاب رنگ متن", "TEXT_COLOR")
+        }
+
     }
     private fun showLoadingDialog() {
         val loadingDialog = ProgressDialog(this)

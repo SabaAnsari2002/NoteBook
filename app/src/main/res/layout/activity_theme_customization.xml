@@ -26,7 +26,7 @@
         android:layout_below="@id/theme_selection_text"
         android:layout_marginTop="30dp"
         android:columnCount="3"
-        android:rowCount="5"
+        android:rowCount="6"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
         android:paddingBottom="30dp"
@@ -567,6 +567,41 @@
 
         </LinearLayout>
 
+        <!--  text color -->
+        <LinearLayout
+            android:id="@+id/text_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_row="5"
+            android:layout_column="0"
+            android:layout_columnWeight="1"
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/login_button"
+                    android:contentDescription="text_color" />
+
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="For text color"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/paytone"
+                android:textColor="#000000"
+                android:gravity="center"/>
+
+        </LinearLayout>
     </GridLayout>
 
     </ScrollView>
