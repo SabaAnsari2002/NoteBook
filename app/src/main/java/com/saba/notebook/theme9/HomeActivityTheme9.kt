@@ -39,6 +39,7 @@ class HomeActivityTheme9 : AppCompatActivity() {
 
         // مقداردهی sharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val textColor = sharedPreferences.getString("TEXT_COLOR", "#000000") ?: "#000000"
 
         relativeLayout = findViewById(R.id.relativeLayout)
 
@@ -65,7 +66,7 @@ class HomeActivityTheme9 : AppCompatActivity() {
 
         // Set up the notes list
         notesList = dbHelper.getNotesByUserId(userId).toMutableList()
-        notesAdapter = NoteAdapter(this, R.layout.note_list_item, notesList)
+        notesAdapter = NoteAdapter(this, R.layout.note_list_item, notesList, textColor)
         notesListView.adapter = notesAdapter
 
         // Hide delete button initially
@@ -320,15 +321,24 @@ class HomeActivityTheme9 : AppCompatActivity() {
         }
     }
 
-    inner class NoteAdapter(context: android.content.Context, resource: Int, objects: List<String>) :
-        ArrayAdapter<String>(context, resource, objects) {
+    inner class NoteAdapter(
+        context: android.content.Context,
+        resource: Int,
+        objects: List<String>,
+        private val textColor: String // Accept textColor as a parameter
+    ) : ArrayAdapter<String>(context, resource, objects) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: layoutInflater.inflate(R.layout.note_list_item, parent, false)
             val noteTitle = view.findViewById<TextView>(R.id.note_title)
             val checkBox = view.findViewById<CheckBox>(R.id.note_checkbox)
 
+            // Set note title text
             noteTitle.text = getItem(position)
+            // Set the text color based on the passed textColor value
+            noteTitle.setTextColor(Color.parseColor(textColor))
+
+            // Handle selection mode and checkboxes
             checkBox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
             checkBox.isChecked = selectedNotes.contains(position)
 

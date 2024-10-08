@@ -1,6 +1,5 @@
 package com.saba.notebook
 
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -26,9 +25,6 @@ class HomeActivityTheme10 : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home10)
-        sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-
-        val textColor = sharedPreferences.getString("TEXT_COLOR", "#000000") ?: "#000000"
 
         dbHelper = DatabaseHelper(this)
         userId = intent.getIntExtra("USER_ID", -1)
@@ -40,8 +36,9 @@ class HomeActivityTheme10 : AppCompatActivity() {
         }
         notesListView = findViewById(R.id.notes_list)
         notesList = dbHelper.getNotesByUserId(userId).toMutableList()
-        notesAdapter = NoteAdapter(this, R.layout.note_list_item, notesList, textColor)
+        notesAdapter = NoteAdapter(this, R.layout.note_list_item, notesList)
         notesListView.adapter = notesAdapter
+
         deleteButton = findViewById(R.id.delete_button)
         deleteButton.visibility = View.GONE  // مخفی کردن دکمه حذف در ابتدا
 
@@ -240,12 +237,9 @@ class HomeActivityTheme10 : AppCompatActivity() {
         }
     }
 
-    inner class NoteAdapter(
-        context: Context,
-        resource: Int,
-        objects: List<String>,
-        private val textColor: String // Store textColor as a property
-    ) : ArrayAdapter<String>(context, resource, objects) {
+
+    inner class NoteAdapter(context: android.content.Context, resource: Int, objects: List<String>) :
+        ArrayAdapter<String>(context, resource, objects) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val view = convertView ?: layoutInflater.inflate(R.layout.note_list_item, parent, false)
@@ -253,12 +247,10 @@ class HomeActivityTheme10 : AppCompatActivity() {
             val checkBox = view.findViewById<CheckBox>(R.id.note_checkbox)
 
             noteTitle.text = getItem(position)
-            noteTitle.setTextColor(android.graphics.Color.parseColor(textColor)) // Set the text color
             checkBox.visibility = if (isSelectionMode) View.VISIBLE else View.GONE
             checkBox.isChecked = selectedNotes.contains(position)
 
             return view
         }
     }
-
 }

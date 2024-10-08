@@ -59,7 +59,7 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.addpost33, R.drawable.addpost34,
                 R.drawable.addpost35
 
-                )
+            )
             "LOGOUT" -> listOf(
                 R.drawable.logout1, R.drawable.logout2,
                 R.drawable.logout3, R.drawable.logout4,
@@ -80,7 +80,7 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.logout33, R.drawable.logout34,
                 R.drawable.logout35
 
-                )
+            )
             "ATTACH" -> listOf(
                 R.drawable.attach1, R.drawable.attach2,
                 R.drawable.attach3, R.drawable.attach4,
@@ -101,7 +101,7 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.attach33, R.drawable.attach34,
                 R.drawable.attach35
 
-                )
+            )
             "DELETE" -> listOf(
                 R.drawable.bin1, R.drawable.bin2,
                 R.drawable.bin3, R.drawable.bin4,
