@@ -1,23 +1,20 @@
 package com.saba.notebook
 
 import android.annotation.SuppressLint
-import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.os.Handler
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
-import kotlinx.coroutines.*
+import android.graphics.Color
+import android.widget.Toast
 
 class ThemeCustomizationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var userId: Int = -1
-    private val ioScope = CoroutineScope(Dispatchers.IO) // برای اجرای عملیات در رشته پس‌زمینه
 
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,202 +23,334 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
-        ioScope.launch {
-            userId = getUserIdFromIntentOrPrefs()
-            if (userId == -1) {
-                withContext(Dispatchers.Main) {
-                    startActivity(Intent(this@ThemeCustomizationActivity, LoginActivityTheme1::class.java))
-                    finish()
-                }
-            }
+        userId = intent.getIntExtra("USER_ID", -1)
+        if (userId == -1) {
+            userId = sharedPreferences.getInt("userId", -1)
         }
 
-        findViewById<LinearLayout>(R.id.splash_screen).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("SPLASH")
+        if (userId == -1) {
+            startActivity(Intent(this, LoginActivityTheme1::class.java))
+            finish()
+            return
         }
 
-        findViewById<LinearLayout>(R.id.main).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("MAIN", "your_image_data_here") // Replace with actual image data
-        }
-
-        findViewById<LinearLayout>(R.id.register).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("REGISTER", "your_register_image_data_here")
-        }
-
-        findViewById<LinearLayout>(R.id.login).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("LOGIN", "your_login_image_data_here")
-        }
-
-        findViewById<LinearLayout>(R.id.home).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("HOME")
-        }
-
-        findViewById<LinearLayout>(R.id.add_note).setOnClickListener {
-            showLoadingDialog()
-
-            handleCustomization("ADD_NOTE")
-        }
-
-        findViewById<LinearLayout>(R.id.logout).setOnClickListener {
-            handleButtonCustomization("LOGOUT")
-        }
-
-        findViewById<LinearLayout>(R.id.addNote).setOnClickListener {
-            handleButtonCustomization("ADD_NOTE")
-        }
-
-        findViewById<LinearLayout>(R.id.attach).setOnClickListener {
-            handleButtonCustomization("ATTACH")
-        }
-
-        findViewById<LinearLayout>(R.id.delete).setOnClickListener {
-            handleButtonCustomization("DELETE")
-        }
-
-        findViewById<LinearLayout>(R.id.background_color).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ پس‌زمینه", "BACKGROUND_COLOR")
-        }
-
-        findViewById<LinearLayout>(R.id.save_button).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ دکمه ذخیره", "SAVE_BUTTON_COLOR")
-        }
-
-        findViewById<LinearLayout>(R.id.register_button).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ دکمه ثبت نام", "REGISTER_BUTTON_COLOR")
-        }
-
-        findViewById<LinearLayout>(R.id.login_button).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ دکمه ورود", "LOGIN_BUTTON_COLOR")
-        }
-
-        findViewById<LinearLayout>(R.id.edit_text_button).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ دکمه یوزر و پسورد", "EDIT_TEXT_BUTTON_COLOR")
-        }
-        findViewById<LinearLayout>(R.id.text_color).setOnClickListener {
-            showColorPickerDialog("انتخاب رنگ متن", "TEXT_COLOR")
-        }
-
-    }
-    private fun showLoadingDialog() {
-        val loadingDialog = ProgressDialog(this)
-        loadingDialog.setMessage("Loading, please wait...")
-        loadingDialog.setCancelable(false)
-        loadingDialog.show()
-
-        // Simulate delay for loading (you can replace this with actual loading process)
-        Handler().postDelayed({
-            loadingDialog.dismiss()
-            // Navigate to the activity once loading is done
-        }, 5000) // 2-second delay, replace with real data loading time
-    }
-
-    private suspend fun getUserIdFromIntentOrPrefs(): Int {
-        return withContext(Dispatchers.IO) {
-            intent.getIntExtra("USER_ID", sharedPreferences.getInt("userId", -1))
-        }
-    }
-
-
-    private fun handleCustomization(imageType: String, imageData: String? = null) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            // Save data in the background
+        val splashScreenButton = findViewById<LinearLayout>(R.id.splash_screen)
+        splashScreenButton.setOnClickListener {
             sharedPreferences.edit().apply {
                 putBoolean("isTheme9Customized", true)
-                imageData?.let {
-                    putString("SELECTED_${imageType}_IMAGE", it)
-                }
+                putString("SELECTED_THEME", "theme10")
                 apply()
             }
-            withContext(Dispatchers.Main) {
-                // Back to the main thread to update the UI or start activity
-                startImagesActivity(imageType)
-            }
-        }
-    }
 
-    private fun handleButtonCustomization(buttonType: String) {
-        ioScope.launch {
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "SPLASH")
+            startActivity(intent)
+        }
+
+        val mainButton = findViewById<LinearLayout>(R.id.main)
+        mainButton.setOnClickListener {
             sharedPreferences.edit().apply {
-                putBoolean("is${buttonType}Customized", true)
+                putBoolean("isTheme9Customized", true)
+                putString("SELECTED_THEME", "theme10")
+                putString("SELECTED_MAIN_IMAGE", "your_image_data_here") // Replace with actual image data
                 apply()
             }
-            withContext(Dispatchers.Main) {
-                startButtonImagesActivity(buttonType)
-            }
+
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "MAIN")
+            startActivity(intent)
         }
-    }
 
-    private fun startImagesActivity(imageType: String) {
-        val intent = Intent(this, ImagesActivity::class.java)
-        intent.putExtra("USER_ID", userId)
-        intent.putExtra("IMAGE_TYPE", imageType)
-        startActivity(intent)
-    }
+        val registerButton = findViewById<LinearLayout>(R.id.register)
+        registerButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isTheme9Customized", true)
+                putString("SELECTED_REGISTER_IMAGE", "your_register_image_data_here") // ذخیره تصویر رجیستر
+                apply()
+            }
 
-    private fun startButtonImagesActivity(buttonType: String) {
-        val intent = Intent(this, ButtonImagesActivity::class.java)
-        intent.putExtra("USER_ID", userId)
-        intent.putExtra("BUTTON_TYPE", buttonType)
-        startActivity(intent)
-    }
+            // هدایت به ImagesActivity برای انتخاب عکس برای رجیستر
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "REGISTER")
+            startActivity(intent)
+        }
 
-    private fun showColorPickerDialog(title: String, preferenceKey: String) {
+        val loginButton = findViewById<LinearLayout>(R.id.login)
+        loginButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isLoginCustomized", true) // شخصی‌سازی صفحه لاگین
+                putString("SELECTED_LOGIN_IMAGE", "your_login_image_data_here") // ذخیره تصویر لاگین
+                apply()
+            }
+
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "LOGIN")
+            startActivity(intent)
+        }
+
+
+
+        val homeButton = findViewById<LinearLayout>(R.id.home)
+        homeButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isHomeCustomized", true)
+                apply()
+            }
+
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("IMAGE_TYPE", "HOME")
+            startActivity(intent)
+        }
+
+        val addNoteButton = findViewById<LinearLayout>(R.id.add_note)
+        addNoteButton.setOnClickListener {
+            // ذخیره اطلاعات شخصی‌سازی صفحه افزودن نوت در SharedPreferences
+            sharedPreferences.edit().apply {
+                putBoolean("isAddNoteCustomized", true) // مشخص کردن اینکه صفحه افزودن نوت شخصی‌سازی شده
+                apply()
+            }
+
+            // هدایت به صفحه‌ی انتخاب تصویر برای افزودن نوت
+            val intent = Intent(this, ImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)  // انتقال userId
+            intent.putExtra("IMAGE_TYPE", "ADD_NOTE") // تعیین نوع تصویر انتخابی برای افزودن نوت
+            startActivity(intent)
+        }
+
+        val backgroundColorButton = findViewById<LinearLayout>(R.id.background_color)
+        backgroundColorButton.setOnClickListener {
+            showColorPickerDialog()
+        }
+
+        val logoutButton = findViewById<LinearLayout>(R.id.logout)
+        logoutButton.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isLogoutCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "LOGOUT")
+            startActivity(intent)
+
+        }
+
+        val addNoteButtonIcon = findViewById<LinearLayout>(R.id.addNote)
+        addNoteButtonIcon.setOnClickListener {
+            sharedPreferences.edit().apply {
+                putBoolean("isAddNoteCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "ADD_NOTE")
+            startActivity(intent)
+
+        }
+
+        val attachButton = findViewById<LinearLayout>(R.id.attach)
+        attachButton.setOnClickListener {
+            // Save attach button customization
+            sharedPreferences.edit().apply {
+                putBoolean("isAttachCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "ATTACH")
+            startActivity(intent)
+        }
+
+        val deleteButton = findViewById<LinearLayout>(R.id.delete)
+        deleteButton.setOnClickListener {
+            // Save delete button customization
+            sharedPreferences.edit().apply {
+                putBoolean("isDeleteCustomized", true)
+                apply()
+            }
+            val intent = Intent(this, ButtonImagesActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("BUTTON_TYPE", "DELETE")
+            startActivity(intent)
+        }
+
+        val saveButtonColorButton = findViewById<LinearLayout>(R.id.save_button)
+        saveButtonColorButton.setOnClickListener {
+            showColorPickerDialogSaveButton()
+        }
+        val registerColorButton = findViewById<LinearLayout>(R.id.register_button)
+        registerColorButton.setOnClickListener {
+            showColorPickerDialogRegisterButton()
+        }
+        val loginColorButton = findViewById<LinearLayout>(R.id.login_button)
+        loginColorButton.setOnClickListener {
+            showColorPickerDialogLoginButton()
+        }
+        val editTextButton = findViewById<LinearLayout>(R.id.edit_text_button)
+        editTextButton.setOnClickListener {
+            showColorPickerDialogEditTextButton()
+        }
+        val textColor = findViewById<LinearLayout>(R.id.text_color)
+        textColor.setOnClickListener {
+            showColorPickerDialogTextColor()
+        }
+
+    }
+    private fun showColorPickerDialogTextColor() {
         ColorPickerDialog.Builder(this)
-            .setTitle(title)
+            .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
             .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
                 val hexColor = "#" + envelope.hexCode
-                ioScope.launch {
-                    saveColor(preferenceKey, hexColor)
-                    withContext(Dispatchers.Main) {
-                        showColorSelectedMessage(hexColor)
-                    }
-                }
+                saveTextColor(hexColor)
+                showColorSelectedMessage(hexColor)
             })
-            .setNegativeButton("لغو") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
             .attachAlphaSlideBar(true)
             .attachBrightnessSlideBar(true)
             .setBottomSpace(12)
             .show()
     }
-
-    private suspend fun saveColor(preferenceKey: String, hexColor: String) {
-        withContext(Dispatchers.IO) {
-            sharedPreferences.edit().apply {
-                putString(preferenceKey, hexColor)
-                apply()
-            }
+    private fun saveTextColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("TEXT_COLOR", hexColor)
+            apply()
         }
     }
+    private fun showColorPickerDialogEditTextButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveEditTextButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveEditTextButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("EDIT_TEXT_BUTTON_COLOR", hexColor)
+            apply()
+        }
+    }
+    private fun showColorPickerDialogRegisterButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ثبت نام")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveRegisterButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveRegisterButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("REGISTER_BUTTON_COLOR", hexColor)
+            apply()
+        }
+    }
+    private fun showColorPickerDialogLoginButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ورود")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveLoginButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveLoginButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("LOGIN_BUTTON_COLOR", hexColor)
+            apply()
+        }
+    }
+
+    private fun showColorPickerDialogSaveButton() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ دکمه ذخیره")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveSaveButtonColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveSaveButtonColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("SAVE_BUTTON_COLOR", hexColor)
+            apply()
+        }
+    }
+
+    private fun showColorPickerDialog() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ پس‌زمینه")
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
+                val hexColor = "#" + envelope.hexCode
+                saveBackgroundColor(hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
+            .show()
+    }
+    private fun saveBackgroundColor(hexColor: String) {
+        sharedPreferences.edit().apply {
+            putString("BACKGROUND_COLOR", hexColor)
+            apply()
+        }
+    }
+
 
     private fun showColorSelectedMessage(hexColor: String) {
         Toast.makeText(this, "رنگ $hexColor انتخاب شد", Toast.LENGTH_SHORT).show()
     }
 
+
+
+
+
     override fun onBackPressed() {
         super.onBackPressed()
-        ioScope.launch {
-            val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
-            withContext(Dispatchers.Main) {
-                val intent = if (isHomeCustomized) {
-                    Intent(this@ThemeCustomizationActivity, HomeActivityTheme9::class.java)
-                } else {
-                    Intent(this@ThemeCustomizationActivity, HomeActivityTheme10::class.java)
-                }
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                intent.putExtra("USER_ID", userId)
-                startActivity(intent)
-                finish()
-            }
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val isHomeCustomized = sharedPreferences.getBoolean("isHomeCustomized", false)
+
+        if (isHomeCustomized) {
+            // If home is customized, launch HomeActivityTheme9
+            val intent = Intent(this, HomeActivityTheme9::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("USER_ID", userId)  // Make sure userId is passed correctly
+            startActivity(intent)
+        } else {
+            // If home is not customized, launch HomeActivityTheme10
+            val intent = Intent(this, HomeActivityTheme10::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            intent.putExtra("USER_ID", userId)  // Make sure userId is passed correctly
+            startActivity(intent)
         }
+        finish()
     }
 }

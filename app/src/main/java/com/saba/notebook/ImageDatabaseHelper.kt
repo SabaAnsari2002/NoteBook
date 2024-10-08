@@ -10,7 +10,7 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         private const val DATABASE_NAME = "images.db"
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 6
         const val TABLE_NAME = "Images"
         const val COLUMN_ID = "id"
         const val COLUMN_IMAGE = "image"
