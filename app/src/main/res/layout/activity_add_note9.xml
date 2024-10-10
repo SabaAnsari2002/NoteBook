@@ -53,8 +53,8 @@
                 android:layout_height="36dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="130dp"
-                android:background="@drawable/palette" />
+                android:layout_marginEnd="120dp"
+                android:background="@drawable/text_color_icon" />
             <Button
                 android:id="@+id/attach_button"
                 android:layout_width="36dp"
