@@ -34,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp">
+
         <EditText
             android:id="@+id/note_date"
             android:layout_width="match_parent"
@@ -46,6 +47,14 @@
             android:layout_marginLeft="10dp"
             android:focusable="false"
             android:background="@null" />
+            <Button
+                android:id="@+id/color_picker_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="120dp"
+                android:background="@drawable/text_color_icon" />
             <Button
                 android:id="@+id/attach_button"
                 android:layout_width="36dp"
