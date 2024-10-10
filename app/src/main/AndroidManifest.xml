@@ -100,7 +100,11 @@
         <activity android:name=".AddNoteActivityTheme6" />
         <activity android:name=".AddNoteActivityTheme7" />
         <activity android:name=".AddNoteActivityTheme8" />
-        <activity android:name=".AddNoteActivityTheme9" />
+        <activity
+            android:name=".AddNoteActivityTheme9"
+            android:theme="@style/Theme.AppCompat.Light">
+        </activity>
+
         <activity android:name=".AddNoteActivityTheme10" />
 
         <activity android:name=".ThemeSelectionActivity"

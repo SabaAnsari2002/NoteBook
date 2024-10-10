@@ -26,6 +26,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.graphics.drawable.DrawableCompat
 import java.io.ByteArrayOutputStream
 import java.util.*
+import com.skydoves.colorpickerview.ColorEnvelope
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
+
 
 class AddNoteActivityTheme9 : ComponentActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -37,6 +41,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
     private lateinit var attachButton: Button
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var relativeLayout: RelativeLayout
+    private lateinit var colorPickerButton: Button
 
     private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
@@ -63,6 +68,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         messageEditText = findViewById(R.id.note_message)
         saveButton = findViewById(R.id.save_button)
         attachButton = findViewById(R.id.attach_button)
+        colorPickerButton = findViewById(R.id.color_picker_button)
         val addNoteImageView = findViewById<ImageView>(R.id.add_note_image)
 
 // بازیابی تصویر انتخابی از SharedPreferences
@@ -88,7 +94,12 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         if (savedColor != null) {
             relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
         }
+        val savedTextColor = sharedPreferences.getInt("NOTE_TEXT_COLOR", Color.BLACK) // مقدار پیش‌فرض رنگ سیاه
+        messageEditText.setTextColor(savedTextColor)
 
+        colorPickerButton.setOnClickListener {
+            showColorPickerDialog()
+        }
         val savedButtonColor = sharedPreferences.getString("SAVE_BUTTON_COLOR", null)
 
         if (savedButtonColor != null) {
@@ -154,8 +165,29 @@ class AddNoteActivityTheme9 : ComponentActivity() {
             getContent.launch("image/*")
         }
         loadAttachButtonImage()
-    }
 
+        colorPickerButton.setOnClickListener {
+            showColorPickerDialog()
+        }
+    }
+    private fun showColorPickerDialog() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ متن")
+            .setPreferenceName("ColorPickerDialog")
+            .setPositiveButton("انتخاب", ColorEnvelopeListener { envelope, _ ->
+                val color = envelope.color
+                messageEditText.setTextColor(color)
+
+                // ذخیره رنگ در SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putInt("NOTE_TEXT_COLOR", color)
+                editor.apply()
+            })
+            .setNegativeButton("لغو") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .show()
+    }
     private fun loadAttachButtonImage() {
         // بازیابی رشته Base64 از SharedPreferences
         val encodedImage = sharedPreferences.getString("ATTACH_BUTTON_IMAGE", null)
@@ -267,40 +299,47 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
         dbHelper.updateNoteImages(noteId, images)
     }
-override fun onBackPressed() {
-    val title = titleEditText.text.toString().trim()
-    val message = messageEditText.text.toString().trim()
+    override fun onBackPressed() {
+        val title = titleEditText.text.toString().trim()
+        val message = messageEditText.text.toString().trim()
 
-    if (title.isEmpty() && message.isEmpty()) {
-        // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
-        super.onBackPressed()
-    } else {
-        // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
-            .setCancelable(false)
-            .setPositiveButton("بله") { dialog, _ ->
-                if (title.isEmpty() || message.isEmpty()) {
-                    // اگر عنوان یا پیام خالی باشد، پیغام خطا نمایش بده
-                    Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                } else {
-                    saveNote()  // ذخیره نوت
-                    finish()  // بستن اکتیویتی و بازگشت به هوم
+        if (title.isEmpty() && message.isEmpty()) {
+            // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
+            super.onBackPressed()
+        } else {
+            // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
+                .setCancelable(false)
+                .setPositiveButton("بله") { dialog, _ ->
+                    if (title.isEmpty() || message.isEmpty()) {
+                        // اگر عنوان یا پیام خالی باشد، پیغام خطا نمایش بده
+                        Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    } else {
+                        saveNote()  // ذخیره نوت
+                        finish()  // بستن اکتیویتی و بازگشت به هوم
+                    }
                 }
-            }
-            .setNegativeButton("خیر") { dialog, _ ->
-                dialog.dismiss()  // نوت را ذخیره نکن
-                super.onBackPressed()  // فراخوانی متد پیش‌فرض onBackPressed برای بستن اکتیویتی
-            }
-        val alert = builder.create()
-        alert.show()
+                .setNegativeButton("خیر") { dialog, _ ->
+                    dialog.dismiss()  // نوت را ذخیره نکن
+                    super.onBackPressed()  // فراخوانی متد پیش‌فرض onBackPressed برای بستن اکتیویتی
+                }
+            val alert = builder.create()
+            alert.show()
+        }
     }
-}
     override fun onDestroy() {
         super.onDestroy()
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی
         bitmaps.forEach { it.first.recycle() }
         bitmaps.clear()
+    }
+    override fun onResume() {
+        super.onResume()
+
+        // بازیابی رنگ ذخیره‌شده از SharedPreferences
+        val savedTextColor = sharedPreferences.getInt("NOTE_TEXT_COLOR", Color.BLACK)
+        messageEditText.setTextColor(savedTextColor)
     }
 }
