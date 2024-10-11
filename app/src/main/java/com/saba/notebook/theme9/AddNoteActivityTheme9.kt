@@ -42,6 +42,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var relativeLayout: RelativeLayout
     private lateinit var colorPickerButton: Button
+    private lateinit var fontPickerButton: Button
 
     private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
@@ -70,10 +71,14 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         attachButton = findViewById(R.id.attach_button)
         colorPickerButton = findViewById(R.id.color_picker_button)
         val addNoteImageView = findViewById<ImageView>(R.id.add_note_image)
+        fontPickerButton = findViewById(R.id.font_picker_button)
 
 // بازیابی تصویر انتخابی از SharedPreferences
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val base64Image = sharedPreferences.getString("SELECTED_ADD_NOTE_IMAGE", null)
+
+        val savedFont = sharedPreferences.getString("SELECTED_FONT", "Roboto")
+        applyFontToMessage(savedFont ?: "Roboto")
 
         if (base64Image != null) {
             // تبدیل Base64 به بایت‌آرایه
@@ -169,6 +174,45 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         colorPickerButton.setOnClickListener {
             showColorPickerDialog()
         }
+
+        val fonts = arrayOf("Acme", "Concertone", "Dancing Script", "Lobster", "Roboto","Lalezar","Jomhuria","Gulzar","Lateef")
+
+        fontPickerButton.setOnClickListener {
+            showFontPickerDialog(fonts)
+        }
+
+    }
+
+    private fun showFontPickerDialog(fonts: Array<String>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("انتخاب فونت")
+        builder.setItems(fonts) { dialog, which ->
+            val selectedFont = fonts[which]
+            applyFontToMessage(selectedFont)
+        }
+        builder.show()
+    }
+
+    private fun applyFontToMessage(fontName: String) {
+        val fontResId = when (fontName) {
+            "Acme" -> R.font.acme
+            "Concertone" -> R.font.concertone
+            "Dancing Script" -> R.font.dmseriftext
+            "Lobster" -> R.font.nerkoone
+            "Lalezar" -> R.font.lalezar
+            "Jomhuria" -> R.font.jomhuria
+            "Gulzar" -> R.font.gulzar
+            "Lateef" -> R.font.lateef
+
+            else -> R.font.paytone // فونت پیش‌فرض
+        }
+
+        messageEditText.typeface = resources.getFont(fontResId)
+
+        // ذخیره فونت انتخابی در SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putString("SELECTED_FONT", fontName)
+        editor.apply()
     }
     private fun showColorPickerDialog() {
         ColorPickerDialog.Builder(this)
