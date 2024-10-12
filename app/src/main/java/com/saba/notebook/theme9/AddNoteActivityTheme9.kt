@@ -335,6 +335,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
     }
 
+
     private fun updateImages() {
         val images = bitmaps.map { (bitmap, position) ->
             val stream = ByteArrayOutputStream()
@@ -343,6 +344,8 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
         dbHelper.updateNoteImages(noteId, images)
     }
+
+
     override fun onBackPressed() {
         val title = titleEditText.text.toString().trim()
         val message = messageEditText.text.toString().trim()
@@ -373,12 +376,16 @@ class AddNoteActivityTheme9 : ComponentActivity() {
             alert.show()
         }
     }
+
+
     override fun onDestroy() {
         super.onDestroy()
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی
         bitmaps.forEach { it.first.recycle() }
         bitmaps.clear()
     }
+
+
     override fun onResume() {
         super.onResume()
 
