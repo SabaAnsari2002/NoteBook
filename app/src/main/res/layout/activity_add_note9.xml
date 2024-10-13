@@ -35,35 +35,19 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp">
 
-        <EditText
-            android:id="@+id/note_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Date"
-            android:textSize="18dp"
-            android:textColor="#000000"
-            android:fontFamily="@font/acme"
-            android:layout_marginTop="7dp"
-            android:layout_marginLeft="10dp"
-            android:focusable="false"
-            android:background="@null" />
-            <Button
-                android:id="@+id/font_picker_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="170dp"
-                android:background="@drawable/font_picker_button"/>
+            <EditText
+                android:id="@+id/note_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Date"
+                android:textSize="18dp"
+                android:textColor="#000000"
+                android:fontFamily="@font/acme"
+                android:layout_marginTop="7dp"
+                android:layout_marginLeft="10dp"
+                android:focusable="false"
+                android:background="@null" />
 
-            <Button
-                android:id="@+id/color_picker_button"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="120dp"
-                android:background="@drawable/text_color_icon" />
             <Button
                 android:id="@+id/attach_button"
                 android:layout_width="36dp"
@@ -84,6 +68,38 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+            <Button
+                android:id="@+id/font_size_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="100dp"
+                android:background="@drawable/font_size_button"/>
+            <Button
+                android:id="@+id/font_picker_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="55dp"
+                android:background="@drawable/font_picker_button"/>
+
+            <Button
+                android:id="@+id/color_picker_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/text_color_icon" />
         </RelativeLayout>
 
         <EditText
