@@ -43,6 +43,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
     private lateinit var relativeLayout: RelativeLayout
     private lateinit var colorPickerButton: Button
     private lateinit var fontPickerButton: Button
+    private lateinit var fontSizeButton: Button
 
     private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
@@ -72,6 +73,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         colorPickerButton = findViewById(R.id.color_picker_button)
         val addNoteImageView = findViewById<ImageView>(R.id.add_note_image)
         fontPickerButton = findViewById(R.id.font_picker_button)
+        fontSizeButton = findViewById(R.id.font_size_button)
 
 // بازیابی تصویر انتخابی از SharedPreferences
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
@@ -180,9 +182,34 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         fontPickerButton.setOnClickListener {
             showFontPickerDialog(fonts)
         }
+        fontSizeButton.setOnClickListener {
+            showFontSizePickerDialog()
+        }
+        val savedFontSize = sharedPreferences.getFloat("SELECTED_FONT_SIZE", 16f) // سایز پیش‌فرض 16
+        messageEditText.textSize = savedFontSize
 
     }
+    private fun showFontSizePickerDialog() {
+        val fontSizes = arrayOf("12", "14", "16", "18", "20", "22", "24", "26", "28", "30")
 
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("انتخاب سایز فونت")
+        builder.setItems(fontSizes) { dialog, which ->
+            val selectedFontSize = fontSizes[which].toFloat()
+            applyFontSizeToMessage(selectedFontSize)
+        }
+        builder.show()
+    }
+
+    private fun applyFontSizeToMessage(fontSize: Float) {
+        // اعمال سایز فونت به متن
+        messageEditText.textSize = fontSize
+
+        // ذخیره سایز فونت انتخاب شده در SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putFloat("SELECTED_FONT_SIZE", fontSize)
+        editor.apply()
+    }
     private fun showFontPickerDialog(fonts: Array<String>) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("انتخاب فونت")
