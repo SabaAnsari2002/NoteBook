@@ -190,7 +190,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
 
     }
     private fun showFontSizePickerDialog() {
-        val fontSizes = arrayOf("12", "14", "16", "18", "20", "22", "24", "26", "28", "30")
+        val fontSizes = arrayOf("12", "14", "16", "18", "20", "22", "24", "26", "28", "30","32","34","36")
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("انتخاب سایز فونت")
