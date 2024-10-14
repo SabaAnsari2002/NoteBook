@@ -9,7 +9,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 
 class ImageAdapter(
-    private val imageList: List<ByteArray>,
+    private val imageList: MutableList<ByteArray>,
     private val onImageClick: (ByteArray) -> Unit
 ) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
@@ -43,5 +43,10 @@ class ImageAdapter(
 
     override fun getItemCount(): Int {
         return imageList.size
+    }
+
+    fun addImage(imageByteArray: ByteArray) {
+        imageList.add(imageByteArray)
+        notifyItemInserted(imageList.size - 1)
     }
 }
