@@ -29,11 +29,12 @@ class ButtonImagesActivity : AppCompatActivity() {
         val imageList = getImageListForButton(buttonType)
 
         // Set adapter for RecyclerView
-        recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
+        recyclerView.adapter = ImageAdapter(imageList.toMutableList()) { selectedImage ->
             // Perform saving or any other action after selecting an image
             saveSelectedImageToPreferences(selectedImage, buttonType)
             finish()
         }
+
     }
 
     // Function to return list of image byte arrays based on button type

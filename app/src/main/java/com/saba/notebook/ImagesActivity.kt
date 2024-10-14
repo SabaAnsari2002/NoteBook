@@ -1,11 +1,16 @@
 package com.saba.notebook
 
+import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
 import android.util.Log
+import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -17,9 +22,11 @@ class ImagesActivity : AppCompatActivity() {
     private lateinit var dbHelper: ImageDatabaseHelper
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var btnSelectFromGallery: Button
 
     companion object {
         private const val PREF_IMAGES_LOADED = "images_loaded"
+        private const val PICK_IMAGE_REQUEST = 1
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +37,7 @@ class ImagesActivity : AppCompatActivity() {
         dbHelper = ImageDatabaseHelper(this)
 
         recyclerView = findViewById(R.id.recyclerView)
+        btnSelectFromGallery = findViewById(R.id.btnSelectFromGallery)
 
         val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
 
@@ -45,10 +53,10 @@ class ImagesActivity : AppCompatActivity() {
         }
 
         // Load images from database
-        val imageList = dbHelper.getAllImages()
+        val imageList = dbHelper.getAllImages().toMutableList()
         Log.d("ImagesActivity", "Number of images loaded: ${imageList.size}")
 
-        recyclerView.layoutManager = GridLayoutManager(this, 4) // تغییر به ۴ ستون
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
         recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
             // Handle image selection
             saveSelectedImageToPreferences(selectedImage, imageType)
@@ -58,6 +66,42 @@ class ImagesActivity : AppCompatActivity() {
             Handler().postDelayed({
                 finish()
             }, 500) // 0.5 seconds delay
+        }
+
+        btnSelectFromGallery.setOnClickListener {
+            openGallery()
+        }
+    }
+
+    private fun openGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, PICK_IMAGE_REQUEST)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
+            val selectedImageUri: Uri? = data.data
+            selectedImageUri?.let { uri ->
+                val imageByteArray = contentResolver.openInputStream(uri)?.readBytes()
+                imageByteArray?.let { byteArray ->
+                    // Save the selected image to the database
+                    dbHelper.insertImage(byteArray)
+
+                    // Update the RecyclerView
+                    (recyclerView.adapter as ImageAdapter).addImage(byteArray)
+
+                    // Handle image selection
+                    val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
+                    saveSelectedImageToPreferences(byteArray, imageType)
+                    showSuccessMessage(imageType)
+
+                    // Delay before closing the activity
+                    Handler().postDelayed({
+                        finish()
+                    }, 500)
+                }
+            }
         }
     }
 
@@ -86,8 +130,7 @@ class ImagesActivity : AppCompatActivity() {
             R.drawable.theme_fifteen5, R.drawable.theme_fifteen6,
             R.drawable.theme_fifteen7, R.drawable.theme_fifteen8,
             R.drawable.theme_fifteen9,
-
-            )
+        )
         for (drawableId in drawableIds) {
             val bitmap = BitmapFactory.decodeResource(resources, drawableId)
             val stream = ByteArrayOutputStream()
