@@ -25,7 +25,12 @@ class RegisterActivityTheme3 : ComponentActivity() {
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
 
-            if (username.isNotEmpty() && password.isNotEmpty()) {
+            // ولیدیشن یوزرنیم و پسورد
+            val usernameValidationResult = validateUsername(username)
+            val passwordValidationResult = validatePassword(password)
+
+            if (usernameValidationResult.isEmpty() && passwordValidationResult.isEmpty()) {
+                // اگر همه شرایط صحیح بود، یوزر ثبت شود
                 val result = dbHelper.addUser(username, password)
                 if (result != -1L) {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
@@ -35,8 +40,50 @@ class RegisterActivityTheme3 : ComponentActivity() {
                     Toast.makeText(this, "This username is already taken. Please choose another username.", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                // نمایش پیام‌های خطا
+                val errorMessage = usernameValidationResult + passwordValidationResult
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    // تابع ولیدیشن یوزرنیم
+    private fun validateUsername(username: String): String {
+        val errors = StringBuilder()
+
+        if (username.length < 8) {
+            errors.append("Username must be at least 8 characters long.\n")
+        }
+        if (!username.any { it.isUpperCase() }) {
+            errors.append("Username must contain at least one uppercase letter.\n")
+        }
+        if (!username.any { it.isLowerCase() }) {
+            errors.append("Username must contain at least one lowercase letter.\n")
+        }
+        if (!username.any { it.isDigit() }) {
+            errors.append("Username must contain at least one digit.\n")
+        }
+
+        return errors.toString()
+    }
+
+    // تابع ولیدیشن پسورد
+    private fun validatePassword(password: String): String {
+        val errors = StringBuilder()
+
+        if (password.length < 8) {
+            errors.append("Password must be at least 8 characters long.\n")
+        }
+        if (!password.any { it.isUpperCase() }) {
+            errors.append("Password must contain at least one uppercase letter.\n")
+        }
+        if (!password.any { it.isLowerCase() }) {
+            errors.append("Password must contain at least one lowercase letter.\n")
+        }
+        if (!password.any { it.isDigit() }) {
+            errors.append("Password must contain at least one digit.\n")
+        }
+
+        return errors.toString()
     }
 }
