@@ -23,9 +23,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Select from Gallery"
+        android:textColor="#FFFFFF"
+        android:background="@drawable/rounded_button"
+        android:fontFamily="@font/paytone"
         android:layout_marginBottom="16dp"
+        android:padding="12dp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
