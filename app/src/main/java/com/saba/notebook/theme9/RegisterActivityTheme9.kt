@@ -84,7 +84,12 @@ class RegisterActivityTheme9 : ComponentActivity() {
             val username = etUsername.text.toString()
             val password = etPassword.text.toString()
 
-            if (username.isNotEmpty() && password.isNotEmpty()) {
+            // فراخوانی توابع ولیدیشن
+            val usernameValidationResult = validateUsername(username)
+            val passwordValidationResult = validatePassword(password)
+
+            if (usernameValidationResult == "valid" && passwordValidationResult == "valid") {
+                // ثبت‌نام در دیتابیس
                 val result = dbHelper.addUser(username, password)
                 if (result != -1L) {
                     Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
@@ -102,8 +107,62 @@ class RegisterActivityTheme9 : ComponentActivity() {
                     Toast.makeText(this, "This username is already taken. Please choose another username.", Toast.LENGTH_SHORT).show()
                 }
             } else {
-                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                // نمایش پیام‌های خطا در صورت عدم موفقیت ولیدیشن
+                if (usernameValidationResult != "valid") {
+                    Toast.makeText(this, usernameValidationResult, Toast.LENGTH_LONG).show()
+                }
+                if (passwordValidationResult != "valid") {
+                    Toast.makeText(this, passwordValidationResult, Toast.LENGTH_LONG).show()
+                }
             }
         }
+    }
+
+    // تابع ولیدیشن برای یوزرنیم
+    private fun validateUsername(username: String): String {
+        val errors = mutableListOf<String>()
+
+        // چک طول یوزرنیم
+        if (username.length < 8) {
+            errors.add("Username must be at least 8 characters long.")
+        }
+        // چک وجود حداقل یک حرف بزرگ
+        if (!username.any { it.isUpperCase() }) {
+            errors.add("Username must contain at least one uppercase letter.")
+        }
+        // چک وجود حداقل یک حرف کوچک
+        if (!username.any { it.isLowerCase() }) {
+            errors.add("Username must contain at least one lowercase letter.")
+        }
+        // چک وجود حداقل یک رقم
+        if (!username.any { it.isDigit() }) {
+            errors.add("Username must contain at least one digit.")
+        }
+
+        return if (errors.isEmpty()) "valid" else errors.joinToString("\n")
+    }
+
+    // تابع ولیدیشن برای پسورد
+    private fun validatePassword(password: String): String {
+        val errors = mutableListOf<String>()
+
+        // چک طول پسورد
+        if (password.length < 8) {
+            errors.add("Password must be at least 8 characters long.")
+        }
+        // چک وجود حداقل یک حرف بزرگ
+        if (!password.any { it.isUpperCase() }) {
+            errors.add("Password must contain at least one uppercase letter.")
+        }
+        // چک وجود حداقل یک حرف کوچک
+        if (!password.any { it.isLowerCase() }) {
+            errors.add("Password must contain at least one lowercase letter.")
+        }
+        // چک وجود حداقل یک رقم
+        if (!password.any { it.isDigit() }) {
+            errors.add("Password must contain at least one digit.")
+        }
+
+        return if (errors.isEmpty()) "valid" else errors.joinToString("\n")
     }
 }
