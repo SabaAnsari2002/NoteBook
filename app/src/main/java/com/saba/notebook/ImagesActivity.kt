@@ -1,6 +1,7 @@
 package com.saba.notebook
 
 import android.app.Activity
+import android.app.ProgressDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -9,12 +10,15 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class ImagesActivity : AppCompatActivity() {
@@ -23,6 +27,7 @@ class ImagesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var btnSelectFromGallery: Button
+    private lateinit var progressDialog: ProgressDialog
 
     companion object {
         private const val PREF_IMAGES_LOADED = "images_loaded"
@@ -39,37 +44,51 @@ class ImagesActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerView)
         btnSelectFromGallery = findViewById(R.id.btnSelectFromGallery)
 
+        // Initialize and show ProgressDialog
+        progressDialog = ProgressDialog(this).apply {
+            setMessage("لطفا منتظر بمانید...")
+            setCancelable(false)
+            show()
+        }
+
         val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
 
         // Check if images have been loaded before
         val imagesLoaded = sharedPreferences.getBoolean(PREF_IMAGES_LOADED, false)
 
-        if (!imagesLoaded) {
-            // Add images from drawable to database (one-time setup)
-            addDrawableImagesToDatabase()
+        // Load images from database asynchronously
+        lifecycleScope.launch {
+            if (!imagesLoaded) {
+                addDrawableImagesToDatabase()
+                sharedPreferences.edit().putBoolean(PREF_IMAGES_LOADED, true).apply()
+            }
 
-            // Mark images as loaded
-            sharedPreferences.edit().putBoolean(PREF_IMAGES_LOADED, true).apply()
-        }
+            val imageList = loadImagesFromDatabase()
+            setupRecyclerView(imageList)
 
-        // Load images from database
-        val imageList = dbHelper.getAllImages().toMutableList()
-        Log.d("ImagesActivity", "Number of images loaded: ${imageList.size}")
-
-        recyclerView.layoutManager = GridLayoutManager(this, 4)
-        recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
-            // Handle image selection
-            saveSelectedImageToPreferences(selectedImage, imageType)
-            showSuccessMessage(imageType)
-
-            // Delay before closing the activity
-            Handler().postDelayed({
-                finish()
-            }, 500) // 0.5 seconds delay
+            // Hide ProgressDialog after images are loaded
+            progressDialog.dismiss()
         }
 
         btnSelectFromGallery.setOnClickListener {
             openGallery()
+        }
+    }
+
+    private suspend fun loadImagesFromDatabase(): MutableList<ByteArray> {
+        return withContext(Dispatchers.IO) {
+            dbHelper.getAllImages().toMutableList()
+        }
+    }
+
+    private fun setupRecyclerView(imageList: MutableList<ByteArray>) {
+        recyclerView.layoutManager = GridLayoutManager(this, 4)
+        recyclerView.adapter = ImageAdapter(imageList) { selectedImage ->
+            val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
+            saveSelectedImageToPreferences(selectedImage, imageType)
+            showSuccessMessage(imageType)
+
+            Handler().postDelayed({ finish() }, 500) // 0.5 second delay
         }
     }
 
@@ -83,66 +102,66 @@ class ImagesActivity : AppCompatActivity() {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null) {
             val selectedImageUri: Uri? = data.data
             selectedImageUri?.let { uri ->
-                val imageByteArray = contentResolver.openInputStream(uri)?.readBytes()
-                imageByteArray?.let { byteArray ->
-                    // Save the selected image to the database
-                    dbHelper.insertImage(byteArray)
+                lifecycleScope.launch {
+                    val imageByteArray = contentResolver.openInputStream(uri)?.readBytes()
+                    imageByteArray?.let { byteArray ->
+                        withContext(Dispatchers.IO) {
+                            dbHelper.insertImage(byteArray)
+                        }
 
-                    // Update the RecyclerView
-                    (recyclerView.adapter as ImageAdapter).addImage(byteArray)
+                        (recyclerView.adapter as ImageAdapter).addImage(byteArray)
 
-                    // Handle image selection
-                    val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
-                    saveSelectedImageToPreferences(byteArray, imageType)
-                    showSuccessMessage(imageType)
+                        val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
+                        saveSelectedImageToPreferences(byteArray, imageType)
+                        showSuccessMessage(imageType)
 
-                    // Delay before closing the activity
-                    Handler().postDelayed({
-                        finish()
-                    }, 500)
+                        Handler().postDelayed({ finish() }, 500)
+                    }
                 }
             }
         }
     }
 
-    private fun addDrawableImagesToDatabase() {
-        val drawableIds = listOf(
-            R.drawable.theme_eleven1, R.drawable.theme_eleven2,
-            R.drawable.theme_eleven3, R.drawable.theme_eleven4,
-            R.drawable.theme_eleven5, R.drawable.theme_eleven6,
-            R.drawable.theme_eleven7, R.drawable.theme_eleven8,
-            R.drawable.theme_eleven9, R.drawable.theme_twelve1,
-            R.drawable.theme_twelve2, R.drawable.theme_twelve3,
-            R.drawable.theme_twelve4, R.drawable.theme_twelve5,
-            R.drawable.theme_twelve6, R.drawable.theme_twelve7,
-            R.drawable.theme_twelve8, R.drawable.theme_twelve9,
-            R.drawable.theme_thirteen1, R.drawable.theme_thirteen2,
-            R.drawable.theme_thirteen3, R.drawable.theme_thirteen4,
-            R.drawable.theme_thirteen5, R.drawable.theme_thirteen6,
-            R.drawable.theme_thirteen7, R.drawable.theme_thirteen8,
-            R.drawable.theme_thirteen9, R.drawable.theme_fourteen1,
-            R.drawable.theme_fourteen2, R.drawable.theme_fourteen3,
-            R.drawable.theme_fourteen4, R.drawable.theme_fourteen5,
-            R.drawable.theme_fourteen6, R.drawable.theme_fourteen7,
-            R.drawable.theme_fourteen8, R.drawable.theme_fourteen9,
-            R.drawable.theme_fifteen1, R.drawable.theme_fifteen2,
-            R.drawable.theme_fifteen3, R.drawable.theme_fifteen4,
-            R.drawable.theme_fifteen5, R.drawable.theme_fifteen6,
-            R.drawable.theme_fifteen7, R.drawable.theme_fifteen8,
-            R.drawable.theme_fifteen9,
-        )
-        for (drawableId in drawableIds) {
-            val bitmap = BitmapFactory.decodeResource(resources, drawableId)
-            val stream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-            val imageByteArray = stream.toByteArray()
-            dbHelper.insertImage(imageByteArray)
+    private suspend fun addDrawableImagesToDatabase() {
+        withContext(Dispatchers.IO) {
+            val drawableIds = listOf(
+                R.drawable.theme_eleven1, R.drawable.theme_eleven2,
+                R.drawable.theme_eleven3, R.drawable.theme_eleven4,
+                R.drawable.theme_eleven5, R.drawable.theme_eleven6,
+                R.drawable.theme_eleven7, R.drawable.theme_eleven8,
+                R.drawable.theme_eleven9, R.drawable.theme_twelve1,
+                R.drawable.theme_twelve2, R.drawable.theme_twelve3,
+                R.drawable.theme_twelve4, R.drawable.theme_twelve5,
+                R.drawable.theme_twelve6, R.drawable.theme_twelve7,
+                R.drawable.theme_twelve8, R.drawable.theme_twelve9,
+                R.drawable.theme_thirteen1, R.drawable.theme_thirteen2,
+                R.drawable.theme_thirteen3, R.drawable.theme_thirteen4,
+                R.drawable.theme_thirteen5, R.drawable.theme_thirteen6,
+                R.drawable.theme_thirteen7, R.drawable.theme_thirteen8,
+                R.drawable.theme_thirteen9, R.drawable.theme_fourteen1,
+                R.drawable.theme_fourteen2, R.drawable.theme_fourteen3,
+                R.drawable.theme_fourteen4, R.drawable.theme_fourteen5,
+                R.drawable.theme_fourteen6, R.drawable.theme_fourteen7,
+                R.drawable.theme_fourteen8, R.drawable.theme_fourteen9,
+                R.drawable.theme_fifteen1, R.drawable.theme_fifteen2,
+                R.drawable.theme_fifteen3, R.drawable.theme_fifteen4,
+                R.drawable.theme_fifteen5, R.drawable.theme_fifteen6,
+                R.drawable.theme_fifteen7, R.drawable.theme_fifteen8,
+                R.drawable.theme_fifteen9,
+            )
+
+            for (drawableId in drawableIds) {
+                val bitmap = BitmapFactory.decodeResource(resources, drawableId)
+                val stream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                val imageByteArray = stream.toByteArray()
+                dbHelper.insertImage(imageByteArray)
+            }
         }
     }
 
     private fun saveSelectedImageToPreferences(imageByteArray: ByteArray, imageType: String) {
         val prefsEditor = sharedPreferences.edit()
-        // Convert ByteArray to Base64 String for storage
         val base64Image = android.util.Base64.encodeToString(imageByteArray, android.util.Base64.DEFAULT)
 
         when (imageType) {
