@@ -1,43 +1,66 @@
 package com.saba.notebook
 
-import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.util.Base64
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 
 class ButtonImagesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var loadingText: TextView
 
-    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_button_images)
 
         recyclerView = findViewById(R.id.recyclerView)
+        progressBar = findViewById(R.id.progressBar)
+        loadingText = findViewById(R.id.loadingText)
+
         recyclerView.layoutManager = GridLayoutManager(this, 4)
 
-        // Get button type from Intent
         val buttonType = intent.getStringExtra("BUTTON_TYPE") ?: "ADD_NOTE"
 
-        // Get list of image byte arrays based on button type
-        val imageList = getImageListForButton(buttonType)
+        lifecycleScope.launch {
+            showLoading()
 
-        // Set adapter for RecyclerView
-        recyclerView.adapter = ImageAdapter(imageList.toMutableList()) { selectedImage ->
-            // Perform saving or any other action after selecting an image
-            saveSelectedImageToPreferences(selectedImage, buttonType)
-            finish()
+            val imageList = withContext(Dispatchers.IO) {
+                getImageListForButton(buttonType)
+            }
+
+            hideLoading()
+
+            recyclerView.adapter = ImageAdapter(imageList.toMutableList()) { selectedImage ->
+                saveSelectedImageToPreferences(selectedImage, buttonType)
+                finish()
+            }
         }
-
     }
 
-    // Function to return list of image byte arrays based on button type
+    private fun showLoading() {
+        progressBar.visibility = View.VISIBLE
+        loadingText.visibility = View.VISIBLE
+        recyclerView.visibility = View.GONE
+    }
+
+    private fun hideLoading() {
+        progressBar.visibility = View.GONE
+        loadingText.visibility = View.GONE
+        recyclerView.visibility = View.VISIBLE
+    }
+
     private fun getImageListForButton(buttonType: String): List<ByteArray> {
         val drawableResList = when (buttonType) {
             "ADD_NOTE" -> listOf(
@@ -59,7 +82,6 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.addpost31, R.drawable.addpost32,
                 R.drawable.addpost33, R.drawable.addpost34,
                 R.drawable.addpost35
-
             )
             "LOGOUT" -> listOf(
                 R.drawable.logout1, R.drawable.logout2,
@@ -80,7 +102,6 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.logout31, R.drawable.logout32,
                 R.drawable.logout33, R.drawable.logout34,
                 R.drawable.logout35
-
             )
             "ATTACH" -> listOf(
                 R.drawable.attach1, R.drawable.attach2,
@@ -101,7 +122,6 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.attach31, R.drawable.attach32,
                 R.drawable.attach33, R.drawable.attach34,
                 R.drawable.attach35
-
             )
             "DELETE" -> listOf(
                 R.drawable.bin1, R.drawable.bin2,
@@ -121,28 +141,25 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.bin29, R.drawable.bin30,
                 R.drawable.bin31, R.drawable.bin32,
                 R.drawable.bin33, R.drawable.bin34,
-                R.drawable.bin35,
-
-                )
+                R.drawable.bin35
+            )
             else -> emptyList()
         }
 
-        // Convert drawable resources to byte arrays
         return drawableResList.map { resId ->
             val bitmap = BitmapFactory.decodeResource(resources, resId)
             val outputStream = ByteArrayOutputStream()
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.toByteArray()  // Return byte array
+            outputStream.toByteArray()
         }
     }
+
     private fun saveSelectedImageToPreferences(selectedImage: ByteArray, buttonType: String) {
         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
 
-        // تبدیل بایت‌ها به رشته Base64
-        val encodedImage = Base64.encodeToString(selectedImage, Base64.DEFAULT)
+        val encodedImage = android.util.Base64.encodeToString(selectedImage, android.util.Base64.DEFAULT)
 
-        // ذخیره تصویر در SharedPreferences بر اساس نوع دکمه
         when (buttonType) {
             "LOGOUT" -> editor.putString("LOGOUT_BUTTON_IMAGE", encodedImage)
             "ADD_NOTE" -> editor.putString("ADD_NOTE_BUTTON_IMAGE", encodedImage)
@@ -152,5 +169,4 @@ class ButtonImagesActivity : AppCompatActivity() {
 
         editor.apply()
     }
-
 }

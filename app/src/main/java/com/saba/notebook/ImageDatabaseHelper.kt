@@ -10,7 +10,7 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
 
     companion object {
         private const val DATABASE_NAME = "images.db"
-        private const val DATABASE_VERSION = 6
+        private const val DATABASE_VERSION = 1 // نسخه دیتابیس را به 1 تنظیم کنید
         const val TABLE_NAME = "Images"
         const val COLUMN_ID = "id"
         const val COLUMN_IMAGE = "image"
@@ -18,6 +18,7 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     override fun onCreate(db: SQLiteDatabase) {
+        // ایجاد جدول برای ذخیره تصاویر
         val createTable = ("CREATE TABLE $TABLE_NAME (" +
                 "$COLUMN_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "$COLUMN_IMAGE BLOB NOT NULL," +
@@ -26,6 +27,7 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        // حذف جدول قدیمی و ایجاد جدول جدید در صورت به‌روزرسانی دیتابیس
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NAME")
         onCreate(db)
     }
@@ -47,6 +49,7 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
             put(COLUMN_IMAGE, image)
             put(COLUMN_HASH, imageHash)
         }
+
         return db.insert(TABLE_NAME, null, values)
     }
 
@@ -71,12 +74,14 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         val imageList = mutableListOf<ByteArray>()
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
+
         if (cursor.moveToFirst()) {
             do {
                 val image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
                 imageList.add(image)
             } while (cursor.moveToNext())
         }
+
         cursor.close()
         return imageList
     }
