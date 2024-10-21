@@ -1,9 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainLayout"
     android:padding="16dp"
     android:background="#FFFFFF">
-
+    <ImageView
+        android:id="@+id/darkModeButton"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/switch_icon"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"/>
     <TextView
         android:id="@+id/theme_selection_text"
         android:layout_width="wrap_content"
@@ -46,6 +56,7 @@
                 android:contentDescription="theme1" />
 
             <TextView
+                android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme1"
@@ -81,6 +92,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme2"
@@ -117,6 +129,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme3"
@@ -147,12 +160,13 @@
                 <ImageView
                     android:layout_width="100dp"
                     android:layout_height="100dp"
-                    android:src="@drawable/add_note4"
+                    android:src="@drawable/add_note41"
                     android:contentDescription="Theme4" />
 
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme4"
@@ -189,6 +203,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme5"
@@ -225,6 +240,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView6"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme6"
@@ -262,6 +278,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme7"
@@ -299,6 +316,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView8"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="theme8"
@@ -335,6 +353,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Create your own theme"
