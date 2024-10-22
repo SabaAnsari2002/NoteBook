@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/mainLayout"
     android:padding="16dp"
     android:background="#FFFFFF">
 
@@ -51,6 +52,7 @@
                 android:contentDescription="splash_screen" />
 
             <TextView
+                android:id="@+id/splash_screen_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For splash screen page"
@@ -86,6 +88,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/main_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For main page"
@@ -123,6 +126,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/register_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For register page"
@@ -159,6 +163,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/login_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For login page"
@@ -196,6 +201,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/home_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For home page"
@@ -232,6 +238,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/add_note_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For add note page"
@@ -268,6 +275,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/background_color_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For background color"
@@ -304,6 +312,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/logout_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For logout icon"
@@ -340,6 +349,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/addNote_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For add note icon"
@@ -376,6 +386,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/delete_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For delete icon"
@@ -412,6 +423,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/attach_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For attach icon"
@@ -448,6 +460,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/save_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For save button"
@@ -484,6 +497,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/register_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For register button"
@@ -520,6 +534,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/login_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For login button"
@@ -556,6 +571,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/edit_text_button_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For edit text button"
@@ -592,6 +608,7 @@
             </FrameLayout>
 
             <TextView
+                android:id="@+id/text_color_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="For text color"
