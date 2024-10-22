@@ -10,7 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import android.graphics.Color
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 
 class ThemeCustomizationActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
@@ -22,6 +25,10 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         setContentView(R.layout.activity_theme_customization)
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
+        // دریافت حالت دارک مود یا لایت مود
+        val isDarkMode = sharedPreferences.getBoolean("DARK_MODE", false)
+        applyMode(isDarkMode)  // فراخوانی تابع برای اعمال حالت مود
 
         userId = intent.getIntExtra("USER_ID", -1)
         if (userId == -1) {
@@ -201,6 +208,72 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
 
     }
+    private fun applyMode(isDarkMode: Boolean) {
+        val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
+        val themeSelectionText = findViewById<TextView>(R.id.theme_selection_text)
+        val splashScreenText = findViewById<TextView>(R.id.splash_screen_text)
+        val mainText = findViewById<TextView>(R.id.main_text)
+        val registerText = findViewById<TextView>(R.id.register_text)
+        val loginText = findViewById<TextView>(R.id.login_text)
+        val homeText = findViewById<TextView>(R.id.home_text)
+        val addNoteText = findViewById<TextView>(R.id.add_note_text)
+        val backgroundColorText = findViewById<TextView>(R.id.background_color_text)
+        val logoutText = findViewById<TextView>(R.id.logout_text)
+        val addnoteText = findViewById<TextView>(R.id.addNote_text)
+        val deleteText = findViewById<TextView>(R.id.delete_text)
+        val attachText = findViewById<TextView>(R.id.attach_text)
+        val saveButtonText = findViewById<TextView>(R.id.save_button_text)
+        val registerButtonText = findViewById<TextView>(R.id.register_button_text)
+        val loginButtonText = findViewById<TextView>(R.id.login_button_text)
+        val editTextButtonText = findViewById<TextView>(R.id.edit_text_button_text)
+        val textColorText = findViewById<TextView>(R.id.text_color_text)
+
+
+        if (isDarkMode) {
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.black))
+            themeSelectionText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            splashScreenText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            mainText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            registerText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            loginText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            homeText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            addNoteText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            backgroundColorText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            logoutText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            addnoteText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            deleteText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            attachText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            saveButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            registerButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            loginButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            editTextButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+            textColorText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+
+        } else {
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+            themeSelectionText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            splashScreenText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            mainText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            registerText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            loginText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            homeText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            addNoteText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            backgroundColorText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            logoutText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            addnoteText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            deleteText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            attachText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            saveButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            registerButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            loginButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            editTextButtonText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+            textColorText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+        }
+    }
+
+
+
+
     private fun showColorPickerDialogTextColor() {
         ColorPickerDialog.Builder(this)
             .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
