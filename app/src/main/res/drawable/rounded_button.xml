@@ -1,5 +1,5 @@
 <!-- res/drawable/rounded_button.xml -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#292929"/> <!-- پس‌زمینه مشکی -->
+    <solid android:color="#FFC107"/> <!-- پس‌زمینه مشکی -->
     <corners android:radius="24dp"/> <!-- گرد کردن گوشه‌ها -->
 </shape>
