@@ -11,8 +11,12 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.MediaStore
 import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +43,11 @@ class ImagesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_images)
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
+        // دریافت حالت دارک مود یا لایت مود
+        val isDarkMode = sharedPreferences.getBoolean("DARK_MODE", false)
+        applyMode(isDarkMode)  // فراخوانی تابع برای اعمال حالت مود
+
         dbHelper = ImageDatabaseHelper(this)
 
         recyclerView = findViewById(R.id.recyclerView)
@@ -74,6 +83,20 @@ class ImagesActivity : AppCompatActivity() {
             openGallery()
         }
     }
+    private fun applyMode(isDarkMode: Boolean) {
+        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout) // تغییر RelativeLayout به ConstraintLayout
+        val btnSelectFromGallery = findViewById<TextView>(R.id.btnSelectFromGallery)
+
+        if (isDarkMode) {
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.black))
+            btnSelectFromGallery.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+
+        } else {
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+            btnSelectFromGallery.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+        }
+    }
+
 
     private suspend fun loadImagesFromDatabase(): MutableList<ByteArray> {
         return withContext(Dispatchers.IO) {
