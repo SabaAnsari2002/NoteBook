@@ -1,5 +1,7 @@
 package com.saba.notebook
 
+import android.annotation.SuppressLint
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -7,6 +9,8 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,10 +24,17 @@ class ButtonImagesActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var loadingText: TextView
+    private lateinit var sharedPreferences: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_button_images)
+
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+
+        // دریافت حالت دارک مود یا لایت مود
+        val isDarkMode = sharedPreferences.getBoolean("DARK_MODE", false)
+        applyMode(isDarkMode)  // فراخوانی تابع برای اعمال حالت مود
 
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.progressBar)
@@ -49,6 +60,22 @@ class ButtonImagesActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("WrongViewCast")
+    private fun applyMode(isDarkMode: Boolean) {
+        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout) // بازیابی ConstraintLayout
+        val loadingText = findViewById<TextView>(R.id.loadingText) // بازیابی TextView
+
+        if (isDarkMode) {
+            // تنظیم پس‌زمینه و رنگ متن برای حالت دارک مود
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.black))
+            loadingText.setTextColor(ContextCompat.getColor(this, android.R.color.white))
+        } else {
+            // تنظیم پس‌زمینه و رنگ متن برای حالت لایت مود
+            mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.white))
+            loadingText.setTextColor(ContextCompat.getColor(this, android.R.color.black))
+        }
+
+    }
     private fun showLoading() {
         progressBar.visibility = View.VISIBLE
         loadingText.visibility = View.VISIBLE
@@ -79,9 +106,9 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.addpost25, R.drawable.addpost26,
                 R.drawable.addpost27, R.drawable.addpost28,
                 R.drawable.addpost29, R.drawable.addpost30,
+                R.drawable.addpost35,
                 R.drawable.addpost31, R.drawable.addpost32,
                 R.drawable.addpost33, R.drawable.addpost34,
-                R.drawable.addpost35
             )
             "LOGOUT" -> listOf(
                 R.drawable.logout1, R.drawable.logout2,
@@ -99,9 +126,9 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.logout25, R.drawable.logout26,
                 R.drawable.logout27, R.drawable.logout28,
                 R.drawable.logout29, R.drawable.logout30,
+                R.drawable.logout35,
                 R.drawable.logout31, R.drawable.logout32,
                 R.drawable.logout33, R.drawable.logout34,
-                R.drawable.logout35
             )
             "ATTACH" -> listOf(
                 R.drawable.attach1, R.drawable.attach2,
@@ -119,9 +146,9 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.attach25, R.drawable.attach26,
                 R.drawable.attach27, R.drawable.attach28,
                 R.drawable.attach29, R.drawable.attach30,
+                R.drawable.attach35,
                 R.drawable.attach31, R.drawable.attach32,
                 R.drawable.attach33, R.drawable.attach34,
-                R.drawable.attach35
             )
             "DELETE" -> listOf(
                 R.drawable.bin1, R.drawable.bin2,
@@ -139,9 +166,9 @@ class ButtonImagesActivity : AppCompatActivity() {
                 R.drawable.bin25, R.drawable.bin26,
                 R.drawable.bin27, R.drawable.bin28,
                 R.drawable.bin29, R.drawable.bin30,
+                R.drawable.bin35,
                 R.drawable.bin31, R.drawable.bin32,
                 R.drawable.bin33, R.drawable.bin34,
-                R.drawable.bin35
             )
             else -> emptyList()
         }
