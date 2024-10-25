@@ -1,6 +1,7 @@
 package com.saba.notebook
 
 import android.annotation.SuppressLint
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -10,9 +11,11 @@ import androidx.appcompat.app.AppCompatActivity
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 
 class ThemeCustomizationActivity : AppCompatActivity() {
@@ -129,10 +132,6 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val backgroundColorButton = findViewById<LinearLayout>(R.id.background_color)
-        backgroundColorButton.setOnClickListener {
-            showColorPickerDialog()
-        }
 
         val logoutButton = findViewById<LinearLayout>(R.id.logout)
         logoutButton.setOnClickListener {
@@ -186,25 +185,33 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val backgroundColorButton = findViewById<LinearLayout>(R.id.background_color)
+        backgroundColorButton.setOnClickListener {
+            showColorPickerDialog("انتخاب رنگ پس‌ زمینه", "BACKGROUND_COLOR")
+        }
         val saveButtonColorButton = findViewById<LinearLayout>(R.id.save_button)
         saveButtonColorButton.setOnClickListener {
-            showColorPickerDialogSaveButton()
+            showColorPickerDialog("انتخاب رنگ دکمه ذخیره", "SAVE_BUTTON_COLOR")
         }
+
         val registerColorButton = findViewById<LinearLayout>(R.id.register_button)
         registerColorButton.setOnClickListener {
-            showColorPickerDialogRegisterButton()
+            showColorPickerDialog("انتخاب رنگ دکمه ثبت نام", "REGISTER_BUTTON_COLOR")
         }
+
         val loginColorButton = findViewById<LinearLayout>(R.id.login_button)
         loginColorButton.setOnClickListener {
-            showColorPickerDialogLoginButton()
+            showColorPickerDialog("انتخاب رنگ دکمه ورود", "LOGIN_BUTTON_COLOR")
         }
+
         val editTextButton = findViewById<LinearLayout>(R.id.edit_text_button)
         editTextButton.setOnClickListener {
-            showColorPickerDialogEditTextButton()
+            showColorPickerDialog("انتخاب رنگ دکمه یوزر و پسورد", "EDIT_TEXT_BUTTON_COLOR")
         }
+
         val textColor = findViewById<LinearLayout>(R.id.text_color)
         textColor.setOnClickListener {
-            showColorPickerDialogTextColor()
+            showColorPickerDialog("انتخاب رنگ متن", "TEXT_COLOR")
         }
 
     }
@@ -271,128 +278,39 @@ class ThemeCustomizationActivity : AppCompatActivity() {
         }
     }
 
+        private fun showColorPickerDialog(
+        title: String,
+        preferenceKey: String,
+        isDarkMode: Boolean = sharedPreferences.getBoolean("DARK_MODE", false)
+    ) {
+        val dialogBuilder = ColorPickerDialog.Builder(this)
+            .setTitle(title)
+            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, _ ->
+                val hexColor = "#" + envelope.hexCode
+                saveColor(preferenceKey, hexColor)
+                showColorSelectedMessage(hexColor)
+            })
+            .setNegativeButton("لغو") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .setBottomSpace(12)
 
+        val dialog = dialogBuilder.create()
+        if (isDarkMode) {
+            dialog.setOnShowListener {
+                dialog.findViewById<TextView>(androidx.appcompat.R.id.alertTitle)?.setTextColor(Color.WHITE)
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(Color.WHITE)
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(Color.WHITE)
+                dialog.window?.setBackgroundDrawable(ColorDrawable(Color.BLACK))
+            }
+        }
 
-
-    private fun showColorPickerDialogTextColor() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveTextColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveTextColor(hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString("TEXT_COLOR", hexColor)
-            apply()
-        }
-    }
-    private fun showColorPickerDialogEditTextButton() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ دکمه یوزر و پسورد")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveEditTextButtonColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveEditTextButtonColor(hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString("EDIT_TEXT_BUTTON_COLOR", hexColor)
-            apply()
-        }
-    }
-    private fun showColorPickerDialogRegisterButton() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ دکمه ثبت نام")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveRegisterButtonColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveRegisterButtonColor(hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString("REGISTER_BUTTON_COLOR", hexColor)
-            apply()
-        }
-    }
-    private fun showColorPickerDialogLoginButton() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ دکمه ورود")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveLoginButtonColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveLoginButtonColor(hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString("LOGIN_BUTTON_COLOR", hexColor)
-            apply()
-        }
+        dialog.show()
     }
 
-    private fun showColorPickerDialogSaveButton() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ دکمه ذخیره")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveSaveButtonColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveSaveButtonColor(hexColor: String) {
+    private fun saveColor(preferenceKey: String, hexColor: String) {
         sharedPreferences.edit().apply {
-            putString("SAVE_BUTTON_COLOR", hexColor)
-            apply()
-        }
-    }
-
-    private fun showColorPickerDialog() {
-        ColorPickerDialog.Builder(this)
-            .setTitle("انتخاب رنگ پس‌زمینه")
-            .setPositiveButton("تایید", ColorEnvelopeListener { envelope, fromUser ->
-                val hexColor = "#" + envelope.hexCode
-                saveBackgroundColor(hexColor)
-                showColorSelectedMessage(hexColor)
-            })
-            .setNegativeButton("لغو") { dialogInterface, i -> dialogInterface.dismiss() }
-            .attachAlphaSlideBar(true)
-            .attachBrightnessSlideBar(true)
-            .setBottomSpace(12)
-            .show()
-    }
-    private fun saveBackgroundColor(hexColor: String) {
-        sharedPreferences.edit().apply {
-            putString("BACKGROUND_COLOR", hexColor)
+            putString(preferenceKey, hexColor)
             apply()
         }
     }
