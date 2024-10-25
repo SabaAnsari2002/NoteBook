@@ -31,7 +31,7 @@ class HomeActivityTheme9 : AppCompatActivity() {
     private var isSelectionMode = false
     private lateinit var relativeLayout: RelativeLayout
 
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint("MissingInflatedId", "WrongViewCast")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +40,13 @@ class HomeActivityTheme9 : AppCompatActivity() {
         // مقداردهی sharedPreferences
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val textColor = sharedPreferences.getString("TEXT_COLOR", "#000000") ?: "#000000"
+
+        val titleText = findViewById<TextView>(R.id.title_text)
+        titleText.setTextColor(Color.parseColor(textColor))
+
+        val titleTextDivider = findViewById<View>(R.id.title_text_divider)
+        titleTextDivider.setBackgroundColor(Color.parseColor(textColor))
+
 
         relativeLayout = findViewById(R.id.relativeLayout)
 
