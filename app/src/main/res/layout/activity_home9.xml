@@ -47,7 +47,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/splash_text"
+            android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NoteBook"
@@ -60,6 +60,7 @@
             android:layout_centerHorizontal="true"/>
 
         <View
+            android:id="@+id/title_text_divider"
             android:layout_width="wrap_content"
             android:layout_height="2dp"
             android:layout_alignParentStart="true"
