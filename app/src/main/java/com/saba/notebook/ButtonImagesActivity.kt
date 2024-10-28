@@ -18,6 +18,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
 
 class ButtonImagesActivity : AppCompatActivity() {
 
@@ -32,9 +34,8 @@ class ButtonImagesActivity : AppCompatActivity() {
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
-        // دریافت حالت دارک مود یا لایت مود
         val isDarkMode = sharedPreferences.getBoolean("DARK_MODE", false)
-        applyMode(isDarkMode)  // فراخوانی تابع برای اعمال حالت مود
+        applyMode(isDarkMode)
 
         recyclerView = findViewById(R.id.recyclerView)
         progressBar = findViewById(R.id.progressBar)
@@ -62,8 +63,8 @@ class ButtonImagesActivity : AppCompatActivity() {
 
     @SuppressLint("WrongViewCast")
     private fun applyMode(isDarkMode: Boolean) {
-        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout) // بازیابی ConstraintLayout
-        val loadingText = findViewById<TextView>(R.id.loadingText) // بازیابی TextView
+        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
+        val loadingText = findViewById<TextView>(R.id.loadingText)
 
         if (isDarkMode) {
             // تنظیم پس‌زمینه و رنگ متن برای حالت دارک مود
@@ -173,18 +174,47 @@ class ButtonImagesActivity : AppCompatActivity() {
             else -> emptyList()
         }
 
-        return drawableResList.map { resId ->
-            val bitmap = BitmapFactory.decodeResource(resources, resId)
-            val outputStream = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-            outputStream.toByteArray()
+        return drawableResList.mapIndexed { index, resId ->
+            val fileName = "${buttonType}_$index.png"
+            if (isImageSaved(fileName)) {
+                loadImageFromInternalStorage(fileName) ?: ByteArray(0)
+            } else {
+                val bitmap = BitmapFactory.decodeResource(resources, resId)
+                val outputStream = ByteArrayOutputStream()
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+                val byteArray = outputStream.toByteArray()
+                saveImageToInternalStorage(byteArray, fileName)
+                byteArray
+            }
+        }
+    }
+
+    private fun isImageSaved(fileName: String): Boolean {
+        val file = File(filesDir, fileName)
+        return file.exists()
+    }
+
+    private fun saveImageToInternalStorage(image: ByteArray, fileName: String) {
+        try {
+            FileOutputStream(File(filesDir, fileName)).use { fos ->
+                fos.write(image)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun loadImageFromInternalStorage(fileName: String): ByteArray? {
+        return try {
+            File(filesDir, fileName).readBytes()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
 
     private fun saveSelectedImageToPreferences(selectedImage: ByteArray, buttonType: String) {
-        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val editor = sharedPreferences.edit()
-
         val encodedImage = android.util.Base64.encodeToString(selectedImage, android.util.Base64.DEFAULT)
 
         when (buttonType) {
