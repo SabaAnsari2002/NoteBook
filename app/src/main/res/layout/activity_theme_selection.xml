@@ -10,7 +10,7 @@
         android:layout_height="45dp"
         android:scaleType="centerCrop"
         android:src="@drawable/switch_icon"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="10dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"/>
