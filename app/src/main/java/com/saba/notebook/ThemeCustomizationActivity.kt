@@ -46,6 +46,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val splashScreenButton = findViewById<LinearLayout>(R.id.splash_screen)
         splashScreenButton.setOnClickListener {
+            showLoadingMessageOnce("splashScreenButton")
             sharedPreferences.edit().apply {
                 putBoolean("isTheme9Customized", true)
                 putString("SELECTED_THEME", "theme10")
@@ -60,6 +61,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val mainButton = findViewById<LinearLayout>(R.id.main)
         mainButton.setOnClickListener {
+            showLoadingMessageOnce("mainButton")
             sharedPreferences.edit().apply {
                 putBoolean("isTheme9Customized", true)
                 putString("SELECTED_THEME", "theme10")
@@ -75,6 +77,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val registerButton = findViewById<LinearLayout>(R.id.register)
         registerButton.setOnClickListener {
+            showLoadingMessageOnce("registerButton")
             sharedPreferences.edit().apply {
                 putBoolean("isTheme9Customized", true)
                 putString("SELECTED_REGISTER_IMAGE", "your_register_image_data_here") // ذخیره تصویر رجیستر
@@ -90,6 +93,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val loginButton = findViewById<LinearLayout>(R.id.login)
         loginButton.setOnClickListener {
+            showLoadingMessageOnce("loginButton")
             sharedPreferences.edit().apply {
                 putBoolean("isLoginCustomized", true) // شخصی‌سازی صفحه لاگین
                 putString("SELECTED_LOGIN_IMAGE", "your_login_image_data_here") // ذخیره تصویر لاگین
@@ -102,10 +106,9 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-
         val homeButton = findViewById<LinearLayout>(R.id.home)
         homeButton.setOnClickListener {
+            showLoadingMessageOnce("homeButton")
             sharedPreferences.edit().apply {
                 putBoolean("isHomeCustomized", true)
                 apply()
@@ -119,6 +122,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val addNoteButton = findViewById<LinearLayout>(R.id.add_note)
         addNoteButton.setOnClickListener {
+            showLoadingMessageOnce("addNoteButton")
             // ذخیره اطلاعات شخصی‌سازی صفحه افزودن نوت در SharedPreferences
             sharedPreferences.edit().apply {
                 putBoolean("isAddNoteCustomized", true) // مشخص کردن اینکه صفحه افزودن نوت شخصی‌سازی شده
@@ -135,6 +139,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val logoutButton = findViewById<LinearLayout>(R.id.logout)
         logoutButton.setOnClickListener {
+            showLoadingMessageOnce("logoutButton")
             sharedPreferences.edit().apply {
                 putBoolean("isLogoutCustomized", true)
                 apply()
@@ -148,6 +153,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val addNoteButtonIcon = findViewById<LinearLayout>(R.id.addNote)
         addNoteButtonIcon.setOnClickListener {
+            showLoadingMessageOnce("addNoteButtonIcon")
             sharedPreferences.edit().apply {
                 putBoolean("isAddNoteCustomized", true)
                 apply()
@@ -161,6 +167,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val attachButton = findViewById<LinearLayout>(R.id.attach)
         attachButton.setOnClickListener {
+            showLoadingMessageOnce("attachButton")
             // Save attach button customization
             sharedPreferences.edit().apply {
                 putBoolean("isAttachCustomized", true)
@@ -174,6 +181,7 @@ class ThemeCustomizationActivity : AppCompatActivity() {
 
         val deleteButton = findViewById<LinearLayout>(R.id.delete)
         deleteButton.setOnClickListener {
+            showLoadingMessageOnce("deleteButton")
             // Save delete button customization
             sharedPreferences.edit().apply {
                 putBoolean("isDeleteCustomized", true)
@@ -214,6 +222,13 @@ class ThemeCustomizationActivity : AppCompatActivity() {
             showColorPickerDialog("انتخاب رنگ متن", "TEXT_COLOR")
         }
 
+    }
+    private fun showLoadingMessageOnce(buttonKey: String) {
+        val hasShownMessage = sharedPreferences.getBoolean(buttonKey, false)
+        if (!hasShownMessage) {
+            Toast.makeText(this, "لطفا صبر کنید تا دیتا بارگذاری شود.", Toast.LENGTH_SHORT).show()
+            sharedPreferences.edit().putBoolean(buttonKey, true).apply()
+        }
     }
     private fun applyMode(isDarkMode: Boolean) {
         val mainLayout = findViewById<RelativeLayout>(R.id.mainLayout)
