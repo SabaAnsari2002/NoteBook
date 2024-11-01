@@ -84,8 +84,8 @@ class ImagesActivity : AppCompatActivity() {
         }
     }
     private fun applyMode(isDarkMode: Boolean) {
-        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout) // تغییر RelativeLayout به ConstraintLayout
-        val btnSelectFromGallery = findViewById<TextView>(R.id.btnSelectFromGallery)
+        val mainLayout = findViewById<ConstraintLayout>(R.id.mainLayout)
+        val btnSelectFromGallery = findViewById<Button>(R.id.btnSelectFromGallery)
 
         if (isDarkMode) {
             mainLayout.setBackgroundColor(ContextCompat.getColor(this, android.R.color.black))
@@ -143,6 +143,35 @@ class ImagesActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+    override fun onStop() {
+        super.onStop()
+
+        val imageType = intent.getStringExtra("IMAGE_TYPE") ?: "SPLASH"
+
+        // بررسی انتخاب تصویر برای صفحه فعلی
+        val selectedImage = when (imageType) {
+            "REGISTER" -> sharedPreferences.getString("SELECTED_REGISTER_IMAGE", null)
+            "LOGIN" -> sharedPreferences.getString("SELECTED_LOGIN_IMAGE", null)
+            "MAIN" -> sharedPreferences.getString("SELECTED_MAIN_IMAGE", null)
+            "HOME" -> sharedPreferences.getString("SELECTED_HOME_IMAGE", null)
+            "ADD_NOTE" -> sharedPreferences.getString("SELECTED_ADD_NOTE_IMAGE", null)
+            else -> sharedPreferences.getString("SELECTED_SPLASH_IMAGE", null)
+        }
+
+        // اگر تصویری انتخاب نشده باشد، تصویر پیش‌فرض را ذخیره می‌کنیم
+        if (selectedImage == null) {
+            val defaultImageByteArray = getDefaultImage()
+            saveSelectedImageToPreferences(defaultImageByteArray, imageType)
+            Toast.makeText(this, "تصویر پیش‌فرض برای $imageType انتخاب شد", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getDefaultImage(): ByteArray {
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.default_image) // تصویر پیش‌فرض
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return stream.toByteArray()
     }
 
     private suspend fun addDrawableImagesToDatabase() {
