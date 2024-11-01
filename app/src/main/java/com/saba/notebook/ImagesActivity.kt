@@ -199,8 +199,13 @@ class ImagesActivity : AppCompatActivity() {
                 R.drawable.theme_fifteen3, R.drawable.theme_fifteen4,
                 R.drawable.theme_fifteen5, R.drawable.theme_fifteen6,
                 R.drawable.theme_fifteen7, R.drawable.theme_fifteen8,
-                R.drawable.theme_fifteen9,
-            )
+                R.drawable.theme_fifteen9, R.drawable.theme_sixteen1,
+                R.drawable.theme_sixteen2,R.drawable.theme_sixteen3,
+                R.drawable.theme_sixteen4,R.drawable.theme_sixteen5,
+                R.drawable.theme_sixteen6,R.drawable.theme_sixteen7,
+                R.drawable.theme_sixteen8,R.drawable.theme_sixteen9,
+
+                )
 
             for (drawableId in drawableIds) {
                 val bitmap = BitmapFactory.decodeResource(resources, drawableId)
