@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -43,7 +44,20 @@ class AddNoteActivityTheme8 : ComponentActivity() {
             }
         }
     }
-
+    // وارد کردن عکس با تنظیم سایز در متدی که عکس از دوربین دریافت می‌شود
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val photo = result.data?.extras?.get("data") as? Bitmap
+            photo?.let {
+                // تنظیم اندازه تصویر به یک‌پنجم اندازه اصلی
+                val newWidth = it.width * 10
+                val newHeight = it.height * 10
+                val resizedPhoto = Bitmap.createScaledBitmap(it, newWidth, newHeight, true)
+                val position = messageEditText.selectionStart
+                insertBitmapIntoMessage(resizedPhoto, position)
+            }
+        }
+    }
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,8 +124,24 @@ class AddNoteActivityTheme8 : ComponentActivity() {
         }
 
         attachButton.setOnClickListener {
-            getContent.launch("image/*")
+            showAttachmentOptions()
         }
+    }
+
+    private fun showAttachmentOptions() {
+        val options = arrayOf("انتخاب از گالری", "گرفتن عکس با دوربین")
+        AlertDialog.Builder(this)
+            .setTitle("انتخاب تصویر")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> getContent.launch("image/*")
+                    1 -> {
+                        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        takePhoto.launch(cameraIntent)
+                    }
+                }
+            }
+            .show()
     }
 
     private fun insertImageIntoMessage(imageUri: Uri) {
@@ -212,36 +242,36 @@ class AddNoteActivityTheme8 : ComponentActivity() {
         }
         dbHelper.updateNoteImages(noteId, images)
     }
-override fun onBackPressed() {
-    val title = titleEditText.text.toString().trim()
-    val message = messageEditText.text.toString().trim()
+    override fun onBackPressed() {
+        val title = titleEditText.text.toString().trim()
+        val message = messageEditText.text.toString().trim()
 
-    if (title.isEmpty() && message.isEmpty()) {
-        // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
-        super.onBackPressed()
-    } else {
-        // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
-        val builder = AlertDialog.Builder(this)
-        builder.setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
-            .setCancelable(false)
-            .setPositiveButton("بله") { dialog, _ ->
-                if (title.isEmpty() || message.isEmpty()) {
-                    // اگر عنوان یا پیام خالی باشد، پیغام خطا نمایش بده
-                    Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
-                } else {
-                    saveNote()  // ذخیره نوت
-                    finish()  // بستن اکتیویتی و بازگشت به هوم
+        if (title.isEmpty() && message.isEmpty()) {
+            // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
+            super.onBackPressed()
+        } else {
+            // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
+            AlertDialog.Builder(this)
+                .setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
+                .setCancelable(false)
+                .setPositiveButton("بله") { dialog, _ ->
+                    if (title.isEmpty() || message.isEmpty()) {
+                        Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
+                        dialog.dismiss()
+                    } else {
+                        saveNote()
+                        finish()
+                    }
                 }
-            }
-            .setNegativeButton("خیر") { dialog, _ ->
-                dialog.dismiss()  // نوت را ذخیره نکن
-                super.onBackPressed()  // فراخوانی متد پیش‌فرض onBackPressed برای بستن اکتیویتی
-            }
-        val alert = builder.create()
-        alert.show()
+                .setNegativeButton("خیر") { dialog, _ ->
+                    dialog.dismiss()
+                    super.onBackPressed()
+                }
+                .create()
+                .show()
+        }
     }
-}
+
     override fun onDestroy() {
         super.onDestroy()
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی

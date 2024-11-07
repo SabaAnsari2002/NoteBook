@@ -13,6 +13,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
@@ -55,6 +56,20 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         uris?.let { selectedImages ->
             for (imageUri in selectedImages) {
                 insertImageIntoMessage(imageUri)
+            }
+        }
+    }
+    // وارد کردن عکس با تنظیم سایز در متدی که عکس از دوربین دریافت می‌شود
+    private val takePhoto = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val photo = result.data?.extras?.get("data") as? Bitmap
+            photo?.let {
+                // تنظیم اندازه تصویر به یک‌پنجم اندازه اصلی
+                val newWidth = it.width * 10
+                val newHeight = it.height * 10
+                val resizedPhoto = Bitmap.createScaledBitmap(it, newWidth, newHeight, true)
+                val position = messageEditText.selectionStart
+                insertBitmapIntoMessage(resizedPhoto, position)
             }
         }
     }
@@ -169,7 +184,7 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         }
 
         attachButton.setOnClickListener {
-            getContent.launch("image/*")
+            showAttachmentOptions()
         }
         loadAttachButtonImage()
 
@@ -189,6 +204,22 @@ class AddNoteActivityTheme9 : ComponentActivity() {
         messageEditText.textSize = savedFontSize
 
     }
+    private fun showAttachmentOptions() {
+        val options = arrayOf("انتخاب از گالری", "گرفتن عکس با دوربین")
+        AlertDialog.Builder(this)
+            .setTitle("انتخاب تصویر")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> getContent.launch("image/*")
+                    1 -> {
+                        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                        takePhoto.launch(cameraIntent)
+                    }
+                }
+            }
+            .show()
+    }
+
     private fun showFontSizePickerDialog() {
         val fontSizes = arrayOf("12", "14", "16", "18", "20", "22", "24", "26", "28", "30","32","34","36")
 
@@ -382,25 +413,24 @@ class AddNoteActivityTheme9 : ComponentActivity() {
             super.onBackPressed()
         } else {
             // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
+            AlertDialog.Builder(this)
+                .setMessage("آیا می‌خواهید نوت را ذخیره کرده و خارج شوید؟")
                 .setCancelable(false)
                 .setPositiveButton("بله") { dialog, _ ->
                     if (title.isEmpty() || message.isEmpty()) {
-                        // اگر عنوان یا پیام خالی باشد، پیغام خطا نمایش بده
                         Toast.makeText(this, "لطفاً عنوان و پیام را وارد کنید", Toast.LENGTH_SHORT).show()
                         dialog.dismiss()
                     } else {
-                        saveNote()  // ذخیره نوت
-                        finish()  // بستن اکتیویتی و بازگشت به هوم
+                        saveNote()
+                        finish()
                     }
                 }
                 .setNegativeButton("خیر") { dialog, _ ->
-                    dialog.dismiss()  // نوت را ذخیره نکن
-                    super.onBackPressed()  // فراخوانی متد پیش‌فرض onBackPressed برای بستن اکتیویتی
+                    dialog.dismiss()
+                    super.onBackPressed()
                 }
-            val alert = builder.create()
-            alert.show()
+                .create()
+                .show()
         }
     }
 
