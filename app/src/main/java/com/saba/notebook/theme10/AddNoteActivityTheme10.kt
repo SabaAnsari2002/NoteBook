@@ -1,11 +1,14 @@
 package com.saba.notebook
+import android.annotation.SuppressLint
 
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -13,15 +16,22 @@ import android.provider.MediaStore
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ImageSpan
+import android.util.Base64
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.graphics.drawable.DrawableCompat
 import java.io.ByteArrayOutputStream
 import java.util.*
-
+import com.skydoves.colorpickerview.ColorPickerDialog
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 class AddNoteActivityTheme10 : ComponentActivity() {
+    private lateinit var sharedPreferences: SharedPreferences
+
 
     private lateinit var titleEditText: EditText
     private lateinit var dateEditText: EditText
@@ -29,6 +39,10 @@ class AddNoteActivityTheme10 : ComponentActivity() {
     private lateinit var saveButton: Button
     private lateinit var attachButton: Button
     private lateinit var dbHelper: DatabaseHelper
+    private lateinit var relativeLayout: RelativeLayout
+    private lateinit var colorPickerButton: Button
+    private lateinit var fontPickerButton: Button
+    private lateinit var fontSizeButton: Button
 
     private val bitmaps = mutableListOf<Pair<Bitmap, Int>>()
     private var isEditing = false
@@ -57,17 +71,62 @@ class AddNoteActivityTheme10 : ComponentActivity() {
             }
         }
     }
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_note10)
+        sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
 
         titleEditText = findViewById(R.id.note_title)
         dateEditText = findViewById(R.id.note_date)
         messageEditText = findViewById(R.id.note_message)
         saveButton = findViewById(R.id.save_button)
-        attachButton = findViewById(R.id.atach_button)
+        attachButton = findViewById(R.id.attach_button)
+        colorPickerButton = findViewById(R.id.color_picker_button)
+        val addNoteImageView = findViewById<ImageView>(R.id.add_note_image)
+        fontPickerButton = findViewById(R.id.font_picker_button)
+        fontSizeButton = findViewById(R.id.font_size_button)
 
+        // بازیابی تصویر انتخابی از SharedPreferences
+        val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val base64Image = sharedPreferences.getString("SELECTED_ADD_NOTE_IMAGE", null)
+
+        val savedFont = sharedPreferences.getString("SELECTED_FONT", "Roboto")
+        applyFontToMessage(savedFont ?: "Roboto")
+
+        if (base64Image != null) {
+            // تبدیل Base64 به بایت‌آرایه
+            val imageBytes = android.util.Base64.decode(base64Image, android.util.Base64.DEFAULT)
+
+            // تبدیل بایت‌آرایه به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+
+            // نمایش تصویر در ImageView
+            addNoteImageView.setImageBitmap(bitmap)
+        }
         dbHelper = DatabaseHelper(this)
+
+        relativeLayout = findViewById(R.id.relativeLayout) // Root layout
+
+        // بارگذاری و اعمال رنگ پس‌زمینه از SharedPreferences (در صورت وجود)
+        val savedColor = sharedPreferences.getString("BACKGROUND_COLOR", null)
+        if (savedColor != null) {
+            relativeLayout.setBackgroundColor(Color.parseColor(savedColor))
+        }
+        val savedTextColor = sharedPreferences.getInt("NOTE_TEXT_COLOR", Color.BLACK) // مقدار پیش‌فرض رنگ سیاه
+        messageEditText.setTextColor(savedTextColor)
+
+        colorPickerButton.setOnClickListener {
+            showColorPickerDialog()
+        }
+        val savedButtonColor = sharedPreferences.getString("SAVE_BUTTON_COLOR", null)
+
+        if (savedButtonColor != null) {
+            val drawable = saveButton.background
+            val wrappedDrawable = DrawableCompat.wrap(drawable)
+            DrawableCompat.setTint(wrappedDrawable, Color.parseColor(savedButtonColor))
+            saveButton.background = wrappedDrawable
+        }
 
         userId = intent.getIntExtra("USER_ID", -1)
 
@@ -124,6 +183,23 @@ class AddNoteActivityTheme10 : ComponentActivity() {
         attachButton.setOnClickListener {
             showAttachmentOptions()
         }
+        loadAttachButtonImage()
+
+        colorPickerButton.setOnClickListener {
+            showColorPickerDialog()
+        }
+
+        val fonts = arrayOf("Acme", "Concertone", "Dancing Script", "Lobster", "Roboto","Lalezar","Jomhuria","Gulzar","Lateef")
+
+        fontPickerButton.setOnClickListener {
+            showFontPickerDialog(fonts)
+        }
+        fontSizeButton.setOnClickListener {
+            showFontSizePickerDialog()
+        }
+        val savedFontSize = sharedPreferences.getFloat("SELECTED_FONT_SIZE", 16f) // سایز پیش‌فرض 16
+        messageEditText.textSize = savedFontSize
+
     }
 
     private fun showAttachmentOptions() {
@@ -140,6 +216,89 @@ class AddNoteActivityTheme10 : ComponentActivity() {
                 }
             }
             .show()
+    }
+
+    private fun showFontSizePickerDialog() {
+        val fontSizes = arrayOf("12", "14", "16", "18", "20", "22", "24", "26", "28", "30","32","34","36")
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("انتخاب سایز فونت")
+        builder.setItems(fontSizes) { dialog, which ->
+            val selectedFontSize = fontSizes[which].toFloat()
+            applyFontSizeToMessage(selectedFontSize)
+        }
+        builder.show()
+    }
+    private fun applyFontSizeToMessage(fontSize: Float) {
+        // اعمال سایز فونت به متن
+        messageEditText.textSize = fontSize
+
+        // ذخیره سایز فونت انتخاب شده در SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putFloat("SELECTED_FONT_SIZE", fontSize)
+        editor.apply()
+    }
+    private fun showFontPickerDialog(fonts: Array<String>) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("انتخاب فونت")
+        builder.setItems(fonts) { dialog, which ->
+            val selectedFont = fonts[which]
+            applyFontToMessage(selectedFont)
+        }
+        builder.show()
+    }
+
+    private fun applyFontToMessage(fontName: String) {
+        val fontResId = when (fontName) {
+            "Acme" -> R.font.acme
+            "Concertone" -> R.font.concertone
+            "Dancing Script" -> R.font.dmseriftext
+            "Lobster" -> R.font.nerkoone
+            "Lalezar" -> R.font.lalezar
+            "Jomhuria" -> R.font.jomhuria
+            "Gulzar" -> R.font.gulzar
+            "Lateef" -> R.font.lateef
+
+            else -> R.font.paytone // فونت پیش‌فرض
+        }
+
+        messageEditText.typeface = resources.getFont(fontResId)
+
+        // ذخیره فونت انتخابی در SharedPreferences
+        val editor = sharedPreferences.edit()
+        editor.putString("SELECTED_FONT", fontName)
+        editor.apply()
+    }
+    private fun showColorPickerDialog() {
+        ColorPickerDialog.Builder(this)
+            .setTitle("انتخاب رنگ متن")
+            .setPreferenceName("ColorPickerDialog")
+            .setPositiveButton("انتخاب", ColorEnvelopeListener { envelope, _ ->
+                val color = envelope.color
+                messageEditText.setTextColor(color)
+
+                // ذخیره رنگ در SharedPreferences
+                val editor = sharedPreferences.edit()
+                editor.putInt("NOTE_TEXT_COLOR", color)
+                editor.apply()
+            })
+            .setNegativeButton("لغو") { dialogInterface, _ -> dialogInterface.dismiss() }
+            .attachAlphaSlideBar(true)
+            .attachBrightnessSlideBar(true)
+            .show()
+    }
+    private fun loadAttachButtonImage() {
+        // بازیابی رشته Base64 از SharedPreferences
+        val encodedImage = sharedPreferences.getString("ATTACH_BUTTON_IMAGE", null)
+        if (encodedImage != null) {
+            // تبدیل رشته Base64 به بایت
+            val imageBytes = Base64.decode(encodedImage, Base64.DEFAULT)
+            // تبدیل بایت به Bitmap
+            val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+            // تنظیم Bitmap به دکمه لاگ اوت
+            val attachButton = findViewById<Button>(R.id.attach_button)
+            attachButton.background = BitmapDrawable(resources, bitmap)
+        }
     }
     private fun insertImageIntoMessage(imageUri: Uri) {
         val bitmap = getBitmapFromUri(imageUri)
@@ -275,5 +434,12 @@ class AddNoteActivityTheme10 : ComponentActivity() {
         // بازیافت تمام Bitmap‌ها در زمان نابودی اکتیویتی
         bitmaps.forEach { it.first.recycle() }
         bitmaps.clear()
+    }
+    override fun onResume() {
+        super.onResume()
+
+        // بازیابی رنگ ذخیره‌شده از SharedPreferences
+        val savedTextColor = sharedPreferences.getInt("NOTE_TEXT_COLOR", Color.BLACK)
+        messageEditText.setTextColor(savedTextColor)
     }
 }

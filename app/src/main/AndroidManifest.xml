@@ -105,8 +105,10 @@
             android:theme="@style/Theme.AppCompat.Light">
         </activity>
 
-        <activity android:name=".AddNoteActivityTheme10" />
-
+        <activity
+            android:name=".AddNoteActivityTheme10"
+            android:theme="@style/Theme.AppCompat.Light">
+        </activity>
         <activity android:name=".ThemeSelectionActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         </activity>

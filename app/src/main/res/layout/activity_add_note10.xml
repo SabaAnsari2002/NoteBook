@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
@@ -46,7 +47,7 @@
             android:focusable="false"
             android:background="@null" />
             <Button
-                android:id="@+id/atach_button"
+                android:id="@+id/attach_button"
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentTop="true"
@@ -65,6 +66,37 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp">
+            <Button
+                android:id="@+id/font_size_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="100dp"
+                android:background="@drawable/font_size_button"/>
+            <Button
+                android:id="@+id/font_picker_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="55dp"
+                android:background="@drawable/font_picker_button"/>
+
+            <Button
+                android:id="@+id/color_picker_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/text_color_icon" />
         </RelativeLayout>
 
         <EditText
