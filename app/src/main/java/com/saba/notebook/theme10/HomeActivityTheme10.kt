@@ -123,17 +123,25 @@ class HomeActivityTheme10 : AppCompatActivity() {
         btnLogout.setOnClickListener {
             exitSelectionMode()
 
-            // نمایش دیالوگ تأیید لاگ‌اوت
             AlertDialog.Builder(this)
                 .setTitle("Log Out")
                 .setMessage("Are you sure you want to log out?")
                 .setPositiveButton("Yes") { _, _ ->
                     // انجام عملیات لاگ‌اوت
                     sharedPreferences.edit().putBoolean("isLoggedIn", false).apply()
-                    startActivity(Intent(this, MainActivityTheme10::class.java))
+
+                    // بررسی شخصی‌سازی صفحه MainActivity
+                    val isMainCustomized = sharedPreferences.getBoolean("isMainCustomized", false)
+                    val intent = if (isMainCustomized) {
+                        Intent(this, MainActivityTheme9::class.java)
+                    } else {
+                        Intent(this, MainActivityTheme10::class.java)
+                    }
+
+                    startActivity(intent)
                     finish()
                 }
-                .setNegativeButton("No", null)  // بستن دیالوگ بدون انجام لاگ‌اوت
+                .setNegativeButton("No", null)
                 .show()
         }
 
