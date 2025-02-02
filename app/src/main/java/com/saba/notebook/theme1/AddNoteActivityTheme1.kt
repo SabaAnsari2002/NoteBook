@@ -120,6 +120,8 @@ class AddNoteActivityTheme1 : ComponentActivity() {
 
         saveButton.setOnClickListener {
             saveNote()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
         }
 
         attachButton.setOnClickListener {

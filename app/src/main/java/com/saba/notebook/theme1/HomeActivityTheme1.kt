@@ -89,7 +89,9 @@ class HomeActivityTheme1 : AppCompatActivity() {
         intent.putExtra("NOTE_TITLE", noteTitle)
         intent.putExtra("NOTE_DATE", noteDate)
         startActivityForResult(intent, 1)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
+
 
     private fun setupButtons() {
         deleteButton.setOnClickListener {
