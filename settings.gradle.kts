@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Note Book"
 include(":app")
- 

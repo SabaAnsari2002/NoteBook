@@ -104,7 +104,9 @@ class HomeActivityTheme1 : AppCompatActivity() {
             val intent = Intent(this, AddNoteActivityTheme1::class.java)
             intent.putExtra("USER_ID", userId)
             startActivityForResult(intent, 1)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
+
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)
         val btnLogout = findViewById<Button>(R.id.logout_button)
