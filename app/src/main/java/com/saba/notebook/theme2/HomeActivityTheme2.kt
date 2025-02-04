@@ -89,8 +89,10 @@ class HomeActivityTheme2 : AppCompatActivity() {
         intent.putExtra("NOTE_TITLE", noteTitle)
         intent.putExtra("NOTE_DATE", noteDate)
         startActivityForResult(intent, 1)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
     }
 
+    
     private fun setupButtons() {
         deleteButton.setOnClickListener {
             if (selectedNotes.isNotEmpty()) {
@@ -104,6 +106,7 @@ class HomeActivityTheme2 : AppCompatActivity() {
             val intent = Intent(this, AddNoteActivityTheme2::class.java)
             intent.putExtra("USER_ID", userId)
             startActivityForResult(intent, 1)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
 
         sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)

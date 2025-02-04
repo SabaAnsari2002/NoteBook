@@ -184,7 +184,10 @@ class HomeActivityTheme9 : AppCompatActivity() {
         intent.putExtra("NOTE_TITLE", noteTitle)
         intent.putExtra("NOTE_DATE", noteDate)
         startActivityForResult(intent, 1)
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
     }
+
 
     private fun setupButtons() {
         deleteButton.setOnClickListener {
@@ -195,6 +198,8 @@ class HomeActivityTheme9 : AppCompatActivity() {
 
         val addButton: Button = findViewById(R.id.add_note_button)
         addButton.setOnClickListener {
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+
             exitSelectionMode() // خروج از حالت انتخاب (اگر چنین عملکردی در برنامه وجود دارد)
 
             // بررسی اینکه آیا صفحه افزودن نوت شخصی‌سازی شده است یا نه
