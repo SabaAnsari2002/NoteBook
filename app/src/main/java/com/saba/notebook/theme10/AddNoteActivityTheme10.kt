@@ -178,6 +178,8 @@ class AddNoteActivityTheme10 : ComponentActivity() {
 
         saveButton.setOnClickListener {
             saveNote()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
         }
 
         attachButton.setOnClickListener {
@@ -406,6 +408,8 @@ class AddNoteActivityTheme10 : ComponentActivity() {
         if (title.isEmpty() && message.isEmpty()) {
             // اگر عنوان و پیام خالی باشند، بدون نمایش پیغام به صفحه اصلی برگرد
             super.onBackPressed()
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
         } else {
             // اگر عنوان یا پیام پر باشند، پیغام ذخیره را نمایش بده
             AlertDialog.Builder(this)
@@ -418,11 +422,15 @@ class AddNoteActivityTheme10 : ComponentActivity() {
                     } else {
                         saveNote()
                         finish()
+                        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
                     }
                 }
                 .setNegativeButton("خیر") { dialog, _ ->
                     dialog.dismiss()
                     super.onBackPressed()
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+
                 }
                 .create()
                 .show()
