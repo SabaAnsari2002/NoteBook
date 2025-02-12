@@ -204,6 +204,25 @@ class ImagesActivity : AppCompatActivity() {
                 R.drawable.theme_sixteen4,R.drawable.theme_sixteen5,
                 R.drawable.theme_sixteen6,R.drawable.theme_sixteen7,
                 R.drawable.theme_sixteen8,R.drawable.theme_sixteen9,
+                R.drawable.theme_seventee1,R.drawable.theme_seventee2,
+                R.drawable.theme_seventee3,R.drawable.theme_seventee4,
+                R.drawable.theme_seventee5,R.drawable.theme_seventee6,
+                R.drawable.theme_seventee7,R.drawable.theme_seventee8,
+                R.drawable.theme_seventee9,R.drawable.theme_eighteen1,
+                R.drawable.theme_eighteen2,R.drawable.theme_eighteen3,
+                R.drawable.theme_eighteen4,R.drawable.theme_eighteen5,
+                R.drawable.theme_eighteen6,R.drawable.theme_eighteen7,
+                R.drawable.theme_eighteen8,R.drawable.theme_eighteen9,
+                R.drawable.theme_nineteen1,R.drawable.theme_nineteen2,
+                R.drawable.theme_nineteen3,R.drawable.theme_nineteen4,
+                R.drawable.theme_nineteen5,R.drawable.theme_nineteen6,
+                R.drawable.theme_nineteen7,R.drawable.theme_nineteen8,
+                R.drawable.theme_nineteen9,R.drawable.theme_twenty1,
+                R.drawable.theme_twenty2,R.drawable.theme_twenty3,
+                R.drawable.theme_twenty4,R.drawable.theme_twenty5,
+                R.drawable.theme_twenty6,R.drawable.theme_twenty7,
+                R.drawable.theme_twenty8,R.drawable.theme_twenty9,
+
 
                 )
 

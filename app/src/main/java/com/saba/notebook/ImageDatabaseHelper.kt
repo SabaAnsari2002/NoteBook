@@ -75,14 +75,17 @@ class ImageDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
         val db = this.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM $TABLE_NAME", null)
 
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             do {
                 val image = cursor.getBlob(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
-                imageList.add(image)
+                if (image != null) {
+                    imageList.add(image)
+                }
             } while (cursor.moveToNext())
         }
 
-        cursor.close()
+        cursor?.close()
         return imageList
     }
+
 }
